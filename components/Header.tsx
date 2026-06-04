@@ -1,10 +1,13 @@
-"use strict";
+"use client";
 
 import { Bell, Search, UserCircle } from "lucide-react";
 import Link from "next/link";
 import { Navbar } from "./Navbar";
+import { useState } from "react";
 
 export function Header() {
+    const [isSearchOpen, setIsSearchOpen] = useState(false);
+
     return (
         // sticky header
         <header className="sticky top-0 z-50 w-full border-b bg-background">
@@ -18,11 +21,16 @@ export function Header() {
                 {/* Nav links */}
                 <Navbar />
                 {/* Notification and User */}
-                <div className="flex items-center justify-between gap-4 lg:gap-6 relative">
+                <div className="flex items-center justify-between gap-4 lg:gap-6">
                     {/* Search */}
-                    <div className="">
-                        <Search className="absolute left-2 top-2 h-4 w-4 text-muted-foreground"></Search>
-                        <input type="search" placeholder="Search patient or record" className="w-64 h-9 bg-muted rounded-md border-input pl-10 pr-4 md:pl-12 md:pr-6 text-sm outline-none focus:border-primary transition-all"></input>
+                    <div className="relative">
+                        <button onClick={() => setIsSearchOpen(!isSearchOpen)}>
+                            <Search className={`${isSearchOpen ? 'absolute left-2 top-2 z-50' : 'block' } h-5 w-5 text-muted-foreground`}></Search>
+                        </button>
+
+                        <input type="search" placeholder="Search patient or record" className={`${isSearchOpen ? 'w-64 h-9 bg-muted rounded-md border-input pl-10 pr-4 md:pl-12 md:pr-6 text-sm outline-none focus:border-primary transition-all' : 'hidden'}`}
+                            autoFocus={isSearchOpen}
+                        />
                     </div>
 
                     {/* Notification */}
