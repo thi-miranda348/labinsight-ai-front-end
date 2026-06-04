@@ -15,17 +15,22 @@ export function Header() {
                 {/* Logo */}
                 <div className="flex items-center gap-1 md:gap-2">
                     <Link href="/" className="">
-                        <h1 className="text-primary font-bold">LabInsight AI</h1>
+                        <h1 className="text-primary font-bold text-md lg:text-xl">LabInsight AI</h1>
                     </Link>
                 </div>
+
+
                 {/* Nav links */}
-                <Navbar />
+                <div className="hidden lg:flex">
+                    <Navbar />
+                </div>
+
                 {/* Notification and User */}
                 <div className="flex items-center justify-between gap-4 lg:gap-6">
                     {/* Search */}
                     <div className="relative">
                         <button onClick={() => setIsSearchOpen(!isSearchOpen)}>
-                            <Search className={`${isSearchOpen ? 'absolute left-2 top-2 z-50' : 'block' } h-5 w-5 text-muted-foreground`}></Search>
+                            <Search className={`${isSearchOpen ? 'absolute left-2 top-2' : 'block mr-2 mt-1'} h-5 w-5 text-muted-foreground`}></Search>
                         </button>
 
                         <input type="search" placeholder="Search patient or record" className={`${isSearchOpen ? 'w-64 h-9 bg-muted rounded-md border-input pl-10 pr-4 md:pl-12 md:pr-6 text-sm outline-none focus:border-primary transition-all' : 'hidden'}`}
