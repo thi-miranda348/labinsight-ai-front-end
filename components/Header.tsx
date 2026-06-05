@@ -15,7 +15,7 @@ export function Header() {
                 {/* Logo */}
                 <div className="flex items-center gap-1 md:gap-2">
                     <Link href="/" className="">
-                        <h1 className="text-primary font-bold text-md lg:text-xl">LabInsight AI</h1>
+                        <span className="text-primary font-bold text-sm md:text-md lg:text-xl">LabInsight AI</span>
                     </Link>
                 </div>
 
