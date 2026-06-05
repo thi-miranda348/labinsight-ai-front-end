@@ -36,7 +36,7 @@ export default function Home() {
 
 
   return (
-    <main className="w-full flex flex-col bg-background text-forefround gap-8 border-b">
+    <main className="w-full flex flex-col bg-background text-foreground gap-8 border-b">
       <div className="">
         <h2 className="">Clinic Dashboard</h2>
         <p className="text-muted-foreground">Welcome back, <span className="">Dr. Chen</span>. Review today's diagnostic insights and pending lab reports.</p>
@@ -126,19 +126,19 @@ export default function Home() {
 
         {/* Action */}
 
-        <div className="border border-border rounded-lg shadow-sm p-6">
+        <div className="lg:col-span-1 border border-border rounded-lg shadow-sm p-6">
           <h3 className="flex items-center flex-row gap-2 mb-2 md:mb-4"><ClipboardCheck className=""></ClipboardCheck>Actions</h3>
           <div className="grid grid-cols-2 grid-rows-2 gap-3 lg:gap-6">
-            <Button variant={"ghost"} className="shadow-sm flex flex-col items-center justifu=y-center px-3 py-12">
+            <Button variant={"ghost"} className="shadow-sm flex flex-col items-center justify-center px-4 py-12">
               <Share2 className="text-primary"></Share2>Share Report
             </Button>
-            <Button variant={"ghost"} className="shadow-sm flex flex-col items-center justifu=y-center px-3 py-12">
+            <Button variant={"ghost"} className="shadow-sm flex flex-col items-center justify-center px-4 py-12">
               <Printer className="text-primary"></Printer>Print Summary
             </Button>
-            <Button variant={"ghost"} className="shadow-sm flex flex-col items-center justifu=y-center px-3 py-12">
+            <Button variant={"ghost"} className="shadow-sm flex flex-col items-center justify-center px-4 py-12">
               <MessageSquareText className="text-primary"></MessageSquareText>Ask AI Doctor
             </Button>
-            <Button variant={"ghost"} className="shadow-sm flex flex-col items-center justifu=y-center px-3 py-12">
+            <Button variant={"ghost"} className="shadow-sm flex flex-col items-center justify-center px-4 py-12">
               <CalendarMinus2 className="text-primary"></CalendarMinus2>Book Consult
             </Button>
           </div>
