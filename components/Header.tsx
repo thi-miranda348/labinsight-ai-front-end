@@ -60,7 +60,7 @@ export function Header() {
                 </div>
 
                 {/* Nav links */}
-                <div className="hidden lg:flex">
+                <div className="hidden md:flex">
                     <Navbar />
                 </div>
 

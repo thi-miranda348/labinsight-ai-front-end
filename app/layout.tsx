@@ -33,7 +33,7 @@ export default function RootLayout({
           <Footer />
         </div>
 
-        <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 border-t bg-background px-6 py-3">
+        <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 border-t bg-background px-6 py-3">
           <BottomNavbar />
         </div>
       </body>

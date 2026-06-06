@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { CircleCheck, FileUp, AlertTriangle, Info, CheckCircle2, Filter, Download, BrainCircuit, ClipboardCheck, Share2, Printer, MessageSquareText, CalendarMinus2 } from "lucide-react";
+import { CircleCheck, FileUp, AlertTriangle, Info, CheckCircle2, Filter, Download, ClipboardCheck, Share2, Printer, MessageSquareText, CalendarMinus2, BotMessageSquare } from "lucide-react";
 import { mockReports } from "./lib/mockData";
 
 export default function Home() {
@@ -112,8 +112,8 @@ export default function Home() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* AI clinic summary */}
         <div className="lg:col-span-2 w-full h-full bg-primary/10 border border-ring/10 rounded-lg p-6">
-          <h3 className="flex items-center flex-row gap-2 text-primary mb-2 md:mb-4"><BrainCircuit className="h-5 w-5" /> AI Clinical Summary</h3>
-          <p className="text-sm md:text-base text-muted-foreground border border-muted rounded-lg bg-background p-2 md:p-4">{recentReport?.primaryFindings || "No primary findings recorded for this analysis."}</p>
+          <h3 className="flex items-center flex-row gap-2 text-primary mb-2 md:mb-4"><BotMessageSquare className="h-5 w-5" /> AI Clinical Summary</h3>
+          <p className="text-sm md:text-base text-muted-foreground border border-muted rounded-lg bg-background p-2 md:p-4 mb-2 lg:mb-4">{recentReport?.primaryFindings || "No primary findings recorded for this analysis."}</p>
 
           <div className="flex items-center gap-3 pt-2">
             <div className="flex -space-x-2">
