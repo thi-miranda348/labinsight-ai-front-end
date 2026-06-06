@@ -28,7 +28,6 @@ export function Header() {
         ) : [];
 
     const handlePatientSelect = (patientId: string) => {
-        // FIX 1: Filter reports specifically for this patient first
         const patientReports = mockReports.filter(r => r.patientId === patientId);
 
         if (patientReports.length === 0) {
@@ -36,7 +35,6 @@ export function Header() {
             return;
         }
 
-        // FIX 2: Sort the local variable 'patientReports', NOT the global 'mockReports'
         const sortedReports = [...patientReports].sort(
             (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
         );
@@ -69,7 +67,6 @@ export function Header() {
                 {/* Notification, User, and Search Toggle Button */}
                 <div className="flex items-center gap-2 md:gap-4 lg:gap-6 ml-auto">
                     {/* Search Toggle Button */}
-                    {/* FIX 3: Fixed the space typo in the className string */}
                     <button
                         type="button"
                         onClick={handleSearchToggle}
@@ -130,7 +127,6 @@ export function Header() {
                                         ))}
                                     </ul>
                                 ) : (
-                                    // FIX 4: Removed the broken map loop from the 'empty' condition
                                     <div className="px-3 py-3 text-left text-sm text-muted-foreground">
                                         No record found
                                     </div>
