@@ -139,4 +139,8 @@
   h3 {
     @apply text-base md:text-lg lg:text-xl font-semibold;
   }
+
+  h4 {
+    @apply text-sm md:text-base lg:text-lg font-semibold text-foreground/80 mb-2 uppercase;
+  }
 }

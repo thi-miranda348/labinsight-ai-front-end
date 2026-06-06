@@ -1,7 +1,7 @@
 "use client"
 
 import { AnalysisReport, Patient } from "@/app/types"
-import { FileText, ShieldAlert, FlaskConical, Send, MoreVertical, CheckCircle, Download, ChevronRight, Dot, DownloadIcon, BadgeCheck } from "lucide-react";
+import { FileText, ShieldAlert, FlaskConical, Send, MoreVertical, CheckCircle, Download, ChevronRight, Dot, DownloadIcon, BadgeCheck, BotMessageSquare, TriangleAlert, FlaskConicalIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 interface viewProps {
     report: AnalysisReport;
@@ -12,7 +12,7 @@ export function InteractiveAnalysisView({ report, patient }: viewProps) {
 
 
     return (
-        <div className="max-w-full mx-auto space-y-6">
+        <div className="w-full mx-auto space-y-6">
 
             <div className="flex flex-col items-start justify-center gap-4">
                 {/* Breadcrumb */}
@@ -42,5 +42,51 @@ export function InteractiveAnalysisView({ report, patient }: viewProps) {
                     </div>
                 </div>
             </div>
-        </div>)
+
+            {/* Two Column Dashboard Grid Structure */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 space-y-6">
+
+                {/* AI summary and Report Table */}
+                <div className="lg:col-span-2">
+                    {/* AI summary */}
+                    <div className="w-full h-full bg-primary/10 border border-ring/10 rounded-lg pt-6 px-6 mb-4">
+                        <div className="flex items-center justify-start flex-row gap-2 lg:gap-4 mb-2 md:mb-3 lg:mb-4">
+                            <div className="bg-primary text-background w-12 h-12 flex items-center justify-center rounded-lg">
+                                <BotMessageSquare className="h-8 w-8" />
+                            </div>
+                            <h3 className="text-primary">
+                                AI Critical Diagnostic Findings</h3>
+                        </div>
+                        <p className="text-sm md:text-base text-muted-foreground p-2 md:p-4 mb-2 lg:mb-4">{report.primaryFindings}</p>
+
+                        <div className="w-full grid grid-cols-1 md:grid-cols-2 items-center justify-between gap-3">
+                            <div className="w-full h-full bg-background rounded-lg px-4 py-4 lg:px-6 lg:py-6 border border-border shadow-sm">
+                                <h4 className="">Primary Concern</h4>
+                                <div className="text-destructive flex items-center justify-start gap-2">
+                                    <TriangleAlert className="w-5 h-5" />
+                                    <span className="font-bold">{ }</span>
+                                </div>
+                            </div>
+                            <div className="w-full h-full bg-background rounded-lg px-4 py-4 lg:px-6 lg:py-6 border border-border shadow-sm">
+                                <h4 className="">Recommended Action</h4>
+                                <div className="text-primary  flex items-center justify-start gap-2">
+                                    <FlaskConicalIcon className="w-5 h-5 " />
+                                    <span className="font-bold">Add Serum Iron & TIBC</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    {/* report */}
+                    <div className="">report</div>
+
+                </div>
+
+                {/* AI chat */}
+                <div className="lg:col-span-1">
+                    AI chat
+                </div>
+            </div>
+        </div >)
 }
