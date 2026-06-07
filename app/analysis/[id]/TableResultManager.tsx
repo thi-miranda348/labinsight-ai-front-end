@@ -45,11 +45,11 @@ export function TableResultsManager({ report }: { report: AnalysisReport }) {
                         <tbody className="divide-y divide-border">
 
                             <tr className="hover:bg-muted/30 transition-colors">
-                                <td className="py-3 px-2 font-medium text-foreground">{ } jajsdjhsafds</td>
-                                <td className="py-3 px-2 text-foreground">{ } { }   dfdfds</td>
-                                <td className="py-3 px-2 text-muted-foreground hidden sm:table-cell">{ }fdfsfs</td>
+                                <td className="py-3 px-2 font-medium text-foreground">{ }</td>
+                                <td className="py-3 px-2 text-foreground">{ } { }</td>
+                                <td className="py-3 px-2 text-muted-foreground hidden sm:table-cell">{ }</td>
                                 <td className="py-3 px-2">
-                                    { }fsdfs
+                                    { }
                                 </td>
                             </tr>
 
