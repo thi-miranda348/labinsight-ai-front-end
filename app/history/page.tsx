@@ -10,29 +10,29 @@ import {
     ChevronRight,
     Calendar,
     Microscope,
-    User
+    User,
+    Bot
 } from "lucide-react";
 import { mockReports } from "../lib/mockData";
 import { Button } from "@/components/ui/button";
 
 export default function HistoryPage() {
 
-
     // Helper for the exact wireframe badges
     const getStatusBadge = (status: string) => {
         switch (status) {
             case 'Critical':
-                return <span className="bg-destructive/10 text-destructive border border-destructive/20 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">Critical</span>;
+                return <span className="bg-destructive/10 text-destructive border border-destructive/20 px-3 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider">Critical</span>;
             case 'Borderline':
-                return <span className="bg-amber-500/10 text-amber-600 border border-amber-500/20 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">Borderline</span>;
+                return <span className="bg-amber-500/10 text-amber-600 border border-amber-500/20 px-3 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider">Borderline</span>;
             case 'Normal':
             default:
-                return <span className="bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">Normal</span>;
+                return <span className="bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 px-3 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider">Normal</span>;
         }
     };
 
     return (
-        <div className="flex flex-col gap-6 animate-in fade-in duration-500 w-full mx-auto">
+        <div className="flex flex-col gap-6 animate-in fade-in duration-500 w-full">
 
             {/* 1. HEADER SECTION */}
             <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-4">
@@ -48,9 +48,10 @@ export default function HistoryPage() {
             {/* 2. FILTER BAR */}
             <div className="border border-border rounded-xl bg-card shadow-sm p-4 flex flex-col lg:flex-row items-start lg:items-end gap-4 lg:gap-6">
 
+                {/* Date Range */}
                 <div className="flex flex-col gap-1.5 w-full lg:w-48">
-                    <label className="flex flex-row items-center gap-1 text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
-                        <Calendar className="w-5 h-5" /> Date Range
+                    <label className="flex flex-row items-center gap-1.5 text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
+                        <Calendar className="w-4 h-4" /> Date Range
                     </label>
                     <div className="relative">
                         <select className="w-full h-10 bg-background border border-input rounded-md pl-3 pr-8 text-sm outline-none focus:border-primary appearance-none cursor-pointer">
@@ -63,9 +64,10 @@ export default function HistoryPage() {
                     </div>
                 </div>
 
+                {/* Analysis Type */}
                 <div className="flex flex-col gap-1.5 w-full lg:w-48">
-                    <label className="flex flex-row items-center gap-1 text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
-                        <Microscope /> Analysis Type
+                    <label className="flex flex-row items-center gap-1.5 text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
+                        <Microscope className="w-4 h-4" /> Analysis Type
                     </label>
                     <div className="relative">
                         <select className="w-full h-10 bg-background border border-input rounded-md pl-3 pr-8 text-sm outline-none focus:border-primary appearance-none cursor-pointer">
@@ -77,9 +79,10 @@ export default function HistoryPage() {
                     </div>
                 </div>
 
+                {/* Patient Search */}
                 <div className="flex flex-col gap-1.5 w-full lg:w-64">
-                    <label className="flex flex-row items-center gap-1 text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
-                        <User /> Patient Search
+                    <label className="flex flex-row items-center gap-1.5 text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
+                        <User className="w-4 h-4" /> Patient Search
                     </label>
                     <div className="relative">
                         <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
@@ -104,9 +107,53 @@ export default function HistoryPage() {
                 </button>
             </div>
 
-            {/* 3. DATA TABLE */}
-            <div className="border border-border rounded-xl bg-card shadow-sm flex flex-col">
-                <div className="overflow-x-auto">
+            {/* 3. DATA VIEW AREA */}
+            <div className="border border-border rounded-xl bg-card shadow-sm flex flex-col overflow-hidden">
+
+                {/* --- MOBILE VIEW: CARD GRID (Hidden on Medium+ screens) --- */}
+                <div className="grid grid-cols-1 gap-4 p-4 md:hidden bg-muted/10">
+                    {mockReports.map((report) => (
+                        <div key={report.id} className="bg-background border border-border rounded-xl p-4 shadow-sm flex flex-col gap-3">
+
+                            {/* Top Row: Date & Status */}
+                            <div className="flex justify-between items-center">
+                                <span className="text-xs font-medium text-muted-foreground">
+                                    {report.date} • 09:12 AM
+                                </span>
+                                {getStatusBadge(report.overallStatus)}
+                            </div>
+
+                            {/* ID */}
+                            <h3 className="text-xl font-bold text-foreground">
+                                {report.id}
+                            </h3>
+
+                            {/* Analysis Type */}
+                            <p className="text-sm font-bold text-primary uppercase tracking-wide">
+                                {report.analysisType} PANEL
+                            </p>
+
+                            {/* Findings (Truncated to 2 lines using line-clamp-2) */}
+                            <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">
+                                {report.primaryFindings}
+                            </p>
+
+                            {/* Divider Line */}
+                            <div className="h-px w-full bg-border my-1"></div>
+
+                            {/* Bottom Row: AI Icons & Link */}
+
+
+                            <Link href={`/analysis/${report.id}`} className="text-primary text-sm font-medium flex items-center gap-1 hover:underline">
+                                View Report <ChevronRight className="w-4 h-4" />
+                            </Link>
+
+                        </div>
+                    ))}
+                </div>
+
+                {/* --- DESKTOP VIEW: TABLE (Hidden on Small screens) --- */}
+                <div className="hidden md:block overflow-x-auto">
                     <table className="w-full text-sm text-left">
                         <thead className="text-[11px] text-muted-foreground uppercase tracking-wider border-b border-border bg-muted/20">
                             <tr>
@@ -124,15 +171,10 @@ export default function HistoryPage() {
                                     <td className="py-4 px-6 text-foreground whitespace-nowrap">{report.date}</td>
                                     <td className="py-4 px-6 text-muted-foreground font-medium">{report.patientId}</td>
                                     <td className="py-4 px-6 text-foreground">{report.analysisType}</td>
-
-                                    {/* Truncate long findings so they don't break the table layout */}
-                                    {/* <td className="py-4 px-6 text-muted-foreground max-w-md truncate"> */}
-                                    <td className="py-4 px-6 text-muted-foreground max-w-md">
+                                    <td className="py-4 px-6 text-muted-foreground max-w-md truncate">
                                         {report.primaryFindings}
                                     </td>
-
                                     <td className="py-4 px-6">
-                                        {/* Use overallStatus from your interface */}
                                         {getStatusBadge(report.overallStatus)}
                                     </td>
                                     <td className="py-4 px-6 text-right">
@@ -147,16 +189,16 @@ export default function HistoryPage() {
                 </div>
 
                 {/* Pagination Footer */}
-                <div className="bg-muted/20 px-6 py-3 border-t border-border flex justify-between items-center rounded-b-xl">
-                    <p className="text-xs text-muted-foreground">Showing 1 to 6 of 1,284 reports</p>
+                <div className="bg-muted/20 px-6 py-3 border-t border-border flex justify-between items-center">
+                    <p className="text-xs text-muted-foreground">Showing 1 to {mockReports.length} of 1,284 reports</p>
                     <div className="flex items-center gap-1 text-sm">
-                        <Button variant={"ghost"} className="h-8 w-8 border-none text-mute-foreground"><ChevronLeft className="h-4 w-4" /></Button>
-                        <Button className="h-8 w-8 bg-primary rounded-md shadow-sm border-none">1</Button>
-                        <Button variant={"ghost"} className="h-8 w-8 border-none text-mute-foreground">2</Button>
-                        <Button variant={"ghost"} className="h-8 w-8 border-none text-mute-foreground">3</Button>
+                        <Button variant="ghost" className="h-8 w-8 p-0 text-muted-foreground border-none"><ChevronLeft className="h-4 w-4" /></Button>
+                        <Button className="h-8 w-8 p-0 bg-primary shadow-sm border-none">1</Button>
+                        <Button variant="ghost" className="h-8 w-8 p-0 text-muted-foreground border-none">2</Button>
+                        <Button variant="ghost" className="h-8 w-8 p-0 text-muted-foreground border-none">3</Button>
                         <span className="px-2 text-muted-foreground">...</span>
-                        <Button variant={"ghost"} className="h-8 w-8 border-none text-mute-foreground">128</Button>
-                        <Button variant={"ghost"} className="h-8 w-8 border-none text-mute-foreground"><ChevronRight className="h-4 w-4" /></Button>
+                        <Button variant="ghost" className="h-8 w-8 p-0 text-muted-foreground border-none">128</Button>
+                        <Button variant="ghost" className="h-8 w-8 p-0 text-muted-foreground border-none"><ChevronRight className="h-4 w-4" /></Button>
                     </div>
                 </div>
             </div>
@@ -193,7 +235,6 @@ export default function HistoryPage() {
                 </div>
 
             </div>
-
         </div>
     );
 }
