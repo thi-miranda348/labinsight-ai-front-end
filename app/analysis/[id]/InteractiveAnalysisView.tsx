@@ -1,7 +1,7 @@
 "use client"
 
 import { AnalysisReport, Patient } from "@/app/types"
-import { ChevronRight, Dot, DownloadIcon, BadgeCheck, BotMessageSquare, TriangleAlert, FlaskConicalIcon } from "lucide-react";
+import { ChevronRight, Dot, DownloadIcon, BadgeCheck, BotMessageSquare, TriangleAlert, FlaskConicalIcon, Send, MoreVertical, DotIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TableResultsManager } from "./TableResultManager";
 interface viewProps {
@@ -52,7 +52,7 @@ export function InteractiveAnalysisView({ report, patient }: viewProps) {
                 {/* AI summary and Report Table */}
                 <div className="lg:col-span-2">
                     {/* AI summary */}
-                    <div className="w-full h-full bg-primary/10 border border-ring/10 rounded-lg pt-6 px-6 mb-4">
+                    <div className="w-full bg-primary/10 border border-ring/10 rounded-lg pt-6 pb-4 px-6 mb-4">
                         <div className="flex items-center justify-start flex-row gap-2 lg:gap-4 mb-2 md:mb-3 lg:mb-4">
                             <div className="bg-primary text-background w-12 h-12 flex items-center justify-center rounded-lg">
                                 <BotMessageSquare className="h-8 w-8" />
@@ -87,9 +87,83 @@ export function InteractiveAnalysisView({ report, patient }: viewProps) {
                 </div>
 
                 {/* AI chat */}
-                <div className="lg:col-span-1">
+                <div className="bg-background border rounded-xl shadow-sm overflow-hidden sticky top-20 flex flex-col h-full">
+
+                    {/* Assistant Header Section */}
+                    <div className="p-4 border-b flex items-center justify-between bg-slate-50/50 dark:bg-zinc-900/50">
+                        <div className="flex items-center gap-2">
+                            <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+                            <span className="font-bold text-sm text-slate-800 dark:text-zinc-200">
+                                LabInsight AI Assistant
+                            </span>
+                        </div>
+                        <button className="text-muted-foreground p-1 hover:bg-slate-100 dark:hover:bg-zinc-800 rounded">
+                            <MoreVertical className="w-4 h-4" />
+                        </button>
+                    </div>
+
+                    {/* Messages Flow Area Container */}
+                    <div className="flex-1 overflow-y-auto p-4 space-y-4 text-xs md:text-sm">
+
+                        {/* Agent Message Block */}
+                        <div className="space-y-1.5">
+                            <span className="text-[10px] lg:text-xs font-bold text-primary uppercase flex flex-row items-center justify-start gap-0">
+                                LABINSIGHT AGENT <DotIcon className="" /> 09:12 AM
+                            </span>
+                            <div className="bg-muted p-3.5 rounded-xl rounded-tl-none text-muted-foreground leading-relaxed shadow-3xs max-w-[80%]">
+                                I have analyzed Mr. Thompson&apos;s current hematology results. The drop in Hemoglobin from 12.8 to 11.2 g/dL over 4 months is clinically significant. Would you like me to cross-reference his medication history for potential interactions?
+                            </div>
+                        </div>
+
+                        {/* Doctor Message Block */}
+                        <div className="space-y-1.5 flex flex-col items-end">
+                            <span className="text-[10px] lg:text-xs font-bold text-muted-foreground uppercase block text-right flex flex-row items-center justify-start gap-0">
+                                09:14 AM <DotIcon className="" /> DR. SARAH CHEN
+                            </span>
+                            <div className="bg-primary p-3.5 rounded-xl rounded-tr-none text-white leading-relaxed shadow-3xs max-w-[80%]">
+                                Yes, please cross-reference. Also, what is the probability of malabsorption based on the low MCV?
+                            </div>
+                        </div>
+
+                        {/* Agent Typeloader Status */}
+                        <div className="space-y-1">
+                            <span className="text-[10px] lg:text-xs font-bold text-primary uppercase flex flex-row items-center justify-start gap-0">
+                                LABINSIGHT AGENT
+                            </span>
+                            <div className="flex items-center gap-1 bg-muted px-4 py-2.5 rounded-full w-16 justify-center">
+                                <span className="w-1.5 h-1.5 bg-muted-foreground/50 rounded-full animate-bounce [animation-delay:-0.3s]" />
+                                <span className="w-1.5 h-1.5 bg-muted-foreground/50 rounded-full animate-bounce [animation-delay:-0.15s]" />
+                                <span className="w-1.5 h-1.5 bg-muted-foreground/50 rounded-full animate-bounce" />
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Interactive Suggestions Actions Hub */}
+                    <div className="px-4 py-2 border-t flex flex-wrap gap-1">
+                        <Button variant={"ghost"} className="text-muted-foreground text-[8px] lg:text-xs px-1.5 py-1.5 rounded-full shadow-3xs">
+                            &ldquo;Show Ferritin History&rdquo;
+                        </Button>
+                        <Button variant={"ghost"} className="text-muted-foreground text-[8px] lg:text-xs px-1.5 py-1.5 rounded-full shadow-3xs">
+                            &ldquo;Check Drug Interactions&rdquo;
+                        </Button>
+                    </div>
+
+                    {/* Input Box Prompt Bar */}
+                    <div className="p-3 border-t">
+                        <div className="relative flex items-center">
+                            <input
+                                type="text"
+                                placeholder="Ask me something..."
+                                className="w-full h-10 pl-3 pr-10 border rounded-lg text-xs outline-none bg-muted focus:border-ring transition-all"
+                            />
+                            <Button className="absolute right-1 p-1.5 rounded-md shadow-sm">
+                                <Send className="w-3.5 h-3.5" />
+                            </Button>
+                        </div>
+                    </div>
 
                 </div>
             </div>
-        </div >)
+        </div>
+    );
 }
