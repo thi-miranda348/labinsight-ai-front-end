@@ -1,12 +1,15 @@
 "use client"
 
 import { AnalysisReport, Patient } from "@/app/types"
-import { FileText, ShieldAlert, FlaskConical, Send, MoreVertical, CheckCircle, Download, ChevronRight, Dot, DownloadIcon, BadgeCheck, BotMessageSquare, TriangleAlert, FlaskConicalIcon } from "lucide-react";
+import { ChevronRight, Dot, DownloadIcon, BadgeCheck, BotMessageSquare, TriangleAlert, FlaskConicalIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { TableResultsManager } from "./TableResultManager";
 interface viewProps {
     report: AnalysisReport;
     patient: Patient;
 }
+
+
 
 export function InteractiveAnalysisView({ report, patient }: viewProps) {
 
@@ -78,14 +81,14 @@ export function InteractiveAnalysisView({ report, patient }: viewProps) {
                     </div>
 
 
-                    {/* report */}
-                    <div className="">report</div>
+                    {/* Dynamic Lab Panels Data Grid Display with Filter Bar */}
+                    <TableResultsManager report={report} />
 
                 </div>
 
                 {/* AI chat */}
                 <div className="lg:col-span-1">
-                    AI chat
+
                 </div>
             </div>
         </div >)
