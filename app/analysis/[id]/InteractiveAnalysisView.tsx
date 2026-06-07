@@ -52,29 +52,30 @@ export function InteractiveAnalysisView({ report, patient }: viewProps) {
                 {/* AI summary and Report Table */}
                 <div className="lg:col-span-2">
                     {/* AI summary */}
-                    <div className="w-full bg-primary/10 border border-ring/10 rounded-lg pt-6 pb-4 px-6 mb-4">
-                        <div className="flex items-center justify-start flex-row gap-2 lg:gap-4 mb-2 md:mb-3 lg:mb-4">
-                            <div className="bg-primary text-background w-12 h-12 flex items-center justify-center rounded-lg">
-                                <BotMessageSquare className="h-8 w-8" />
-                            </div>
-                            <h3 className="text-primary">
-                                AI Critical Diagnostic Findings</h3>
+                    <div className="lg:col-span-2 border border-primary/20 bg-primary/10 rounded-xl p-2 md:p-4 lg:p-6 shadow-sm flex flex-col md:flex-row gap-5 items-start">
+                        <div className="bg-primary p-3 rounded-xl text-primary-foreground shadow-sm shrink-0 mt-1">
+                            <BotMessageSquare className="h-8 w-8" />
                         </div>
-                        <p className="text-sm md:text-base text-muted-foreground p-2 md:p-4 mb-2 lg:mb-4">{report.primaryFindings}</p>
+                        <div>
+                            <h3 className="text-primary">AI Critical Diagnostic Findings</h3>
+                            <p className="text-sm md:text-base text-muted-foreground my-2 lg:my-4">
+                                {report.primaryFindings}
+                            </p>
 
-                        <div className="w-full grid grid-cols-1 md:grid-cols-2 items-center justify-between gap-3">
-                            <div className="w-full h-full bg-background rounded-lg px-4 py-4 lg:px-6 lg:py-6 border border-border shadow-sm">
-                                <h4 className="">Primary Concern</h4>
-                                <div className="text-destructive flex items-center justify-start gap-2">
-                                    <TriangleAlert className="w-5 h-5" />
-                                    <span className="font-bold">{ }</span>
+                            <div className="w-full grid grid-cols-1 md:grid-cols-2 items-center justify-between gap-3">
+                                <div className="w-full h-full bg-background rounded-lg px-4 py-4 lg:px-6 lg:py-6 border border-border shadow-sm">
+                                    <h4 className="">Primary Concern</h4>
+                                    <div className="text-destructive flex items-center justify-start gap-2">
+                                        <TriangleAlert className="w-5 h-5" />
+                                        <span className="font-bold">{ }</span>
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="w-full h-full bg-background rounded-lg px-4 py-4 lg:px-6 lg:py-6 border border-border shadow-sm">
-                                <h4 className="">Recommended Action</h4>
-                                <div className="text-primary  flex items-center justify-start gap-2">
-                                    <FlaskConicalIcon className="w-5 h-5 " />
-                                    <span className="font-bold">Add Serum Iron & TIBC</span>
+                                <div className="w-full h-full bg-background rounded-lg px-4 py-4 lg:px-6 lg:py-6 border border-border shadow-sm">
+                                    <h4 className="">Recommended Action</h4>
+                                    <div className="text-primary  flex items-center justify-start gap-2">
+                                        <FlaskConicalIcon className="w-5 h-5 " />
+                                        <span className="font-bold">Add Serum Iron & TIBC</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
