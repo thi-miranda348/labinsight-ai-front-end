@@ -9,7 +9,6 @@ export function BottomNavbar() {
 
     const navItems = [
         { name: "Dashboard", href: "/", icon: LayoutDashboard },
-        { name: "Analysis", href: "/analysis", icon: ChartArea },
         { name: "History", href: "/history", icon: HistoryIcon },
     ];
 

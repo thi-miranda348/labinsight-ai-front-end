@@ -25,10 +25,10 @@ export default function RootLayout({
       lang="en"
       className={`${inter.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-background text-foreground text-sm md:text-base lg:text-lg">
+      <body className="min-h-full flex flex-col bg-background text-foreground text-sm md:text-base lg:text-lg overflow-x-hidden">
         <Header />
 
-        <div className="flex-1 px-4 py-4 md:py-8 pb-24 md:pb-28 lg:pb-0 flex flex-col space-y-6 ">{children}
+        <div className="flex-1 px-4 py-4 md:py-8 pb-24 md:pb-0 flex flex-col space-y-6 ">{children}
 
           <Footer />
         </div>

@@ -50,7 +50,7 @@ export function InteractiveAnalysisView({ report, patient }: viewProps) {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 space-y-6">
 
                 {/* AI summary and Report Table */}
-                <div className="lg:col-span-2">
+                <div className="lg:col-span-2 space-y-6">
                     {/* AI summary */}
                     <div className="lg:col-span-2 border border-primary/20 bg-primary/10 rounded-xl p-2 md:p-4 lg:p-6 shadow-sm flex flex-col md:flex-row gap-5 items-start">
                         <div className="bg-primary p-3 rounded-xl text-primary-foreground shadow-sm shrink-0 mt-1">
@@ -67,7 +67,7 @@ export function InteractiveAnalysisView({ report, patient }: viewProps) {
                                     <h4 className="">Primary Concern</h4>
                                     <div className="text-destructive flex items-center justify-start gap-2">
                                         <TriangleAlert className="w-5 h-5" />
-                                        <span className="font-bold">{ }</span>
+                                        <span className="font-bold">{report.overallStatus} Alert</span>
                                     </div>
                                 </div>
                                 <div className="w-full h-full bg-background rounded-lg px-4 py-4 lg:px-6 lg:py-6 border border-border shadow-sm">

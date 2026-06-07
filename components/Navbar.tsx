@@ -8,7 +8,6 @@ export function Navbar() {
 
     const navItems = [
         { name: "Dashboard", href: "/" },
-        { name: "Analysis", href: "/analysis" },
         { name: "History", href: "/history" },
     ];
 
@@ -16,16 +15,15 @@ export function Navbar() {
         <nav className="flex items-center justify-between gap-4 lg:gap-8">
             {navItems.map((item) => {
                 const isActive = pathname === item.href;
-                
+
                 return (
-                    <Link 
-                        key={item.name} 
-                        href={item.href} 
-                        className={`text-sm lg:text-md pb-1 mt-1 transition-colors ${
-                            isActive 
-                            ? "text-primary font-bold border-b-2 border-primary" 
-                            : "text-muted-foreground hover:text-primary"
-                        }`}
+                    <Link
+                        key={item.name}
+                        href={item.href}
+                        className={`text-sm lg:text-md pb-1 mt-1 transition-colors ${isActive
+                                ? "text-primary font-bold border-b-2 border-primary"
+                                : "text-muted-foreground hover:text-primary"
+                            }`}
                     >
                         {item.name}
                     </Link>

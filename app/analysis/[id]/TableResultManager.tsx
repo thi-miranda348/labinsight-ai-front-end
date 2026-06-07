@@ -2,22 +2,47 @@
 
 import { AnalysisReport } from "@/app/types";
 import { Button } from "@/components/ui/button";
-import { FlaskConical } from "lucide-react";
+import { AlertTriangle, Info, CheckCircle2 } from "lucide-react";
 
 export function TableResultsManager({ report }: { report: AnalysisReport }) {
+
+    // Helper to generate the exact status badges
+    const getStatusBadge = (status: string) => {
+        switch (status) {
+            case 'Critical':
+                return (
+                    <span className="inline-flex items-center gap-1.5 bg-destructive/10 text-destructive border border-destructive/20 px-2.5 py-1 rounded-md text-[10px] font-bold tracking-wider uppercase">
+                        <AlertTriangle className="h-3 w-3" /> Critical
+                    </span>
+                );
+            case 'Borderline':
+                return (
+                    <span className="inline-flex items-center gap-1.5 bg-amber-500/10 text-amber-600 border border-amber-500/20 px-2.5 py-1 rounded-md text-[10px] font-bold tracking-wider uppercase">
+                        <Info className="h-3 w-3" /> Borderline
+                    </span>
+                );
+            case 'Normal':
+            default:
+                return (
+                    <span className="inline-flex items-center gap-1.5 bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 px-2.5 py-1 rounded-md text-[10px] font-bold tracking-wider uppercase">
+                        <CheckCircle2 className="h-3 w-3" /> Normal
+                    </span>
+                );
+        }
+    };
+
     return (
         <div className="space-y-6">
-            <div className="border rounded-xl shadow-2xs overflow-hidden">
+            <div className="border rounded-xl shadow-sm overflow-hidden bg-card">
 
-                {/* filter */}
-                <div className="p-4 border-b bg-slate-50/50 dark:bg-zinc-900/50 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                {/* Filter Header */}
+                <div className="p-4 border-b bg-muted/30 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                     <div className="flex items-center gap-2">
-                        <FlaskConical className="w-4 h-4 text-blue-600" />
-                        <span className="font-bold text-sm text-slate-800 dark:text-zinc-100">
+                        <h3 className="">
                             {report.analysisType} Diagnostic Panel
-                        </span>
-                        <span className="text-[10px] font-mono bg-slate-200 dark:bg-zinc-800 text-slate-600 dark:text-zinc-400 px-1.5 py-0.5 rounded">
-                            Ref: {report.id}
+                        </h3>
+                        <span className="text-[10px] font-mono bg-background border border-border text-muted-foreground px-1.5 py-0.5 rounded">
+                            {report.id}
                         </span>
                     </div>
                     <span className="text-[11px] font-medium text-muted-foreground">
@@ -25,37 +50,42 @@ export function TableResultsManager({ report }: { report: AnalysisReport }) {
                     </span>
                 </div>
 
-                <div className="px-4 py-3 border-b flex flex-wrap items-center gap-2">
-                    <Button variant={"outline"} className="rounded-full border border-primary/50 px-2 py-1">All Results</Button>
-                    <Button variant={"outline"} className="rounded-full border border-primary/50 px-2 py-1">Out of Range</Button>
-                    <Button variant={"outline"} className="rounded-full border border-primary/50 px-2 py-1">Critical Only</Button>
+                {/* Filter Buttons */}
+                <div className="px-4 py-3 border-b flex flex-wrap items-center gap-2 bg-background">
+                    <Button variant={"default"} className="rounded-full px-4 py-1 h-8 text-xs">All Results</Button>
+                    <Button variant={"outline"} className="rounded-full px-4 py-1 h-8 text-xs bg-background">Out of Range</Button>
+                    <Button variant={"outline"} className="rounded-full px-4 py-1 h-8 text-xs bg-background">Critical Only</Button>
                 </div>
 
                 {/* Table content */}
                 <div className="overflow-x-auto">
                     <table className="w-full text-left text-xs md:text-sm border-collapse">
                         <thead>
-                            <tr className="border-b bg-primary/10 font-medium uppercase tracking-wider">
-                                <th className="py-3 px-2 font-semibold">Test Name</th>
-                                <th className="py-3 px-2 font-semibold">Result</th>
-                                <th className="py-3 px-2 font-semibold hidden sm:table-cell">Ref Range</th>
-                                <th className="py-3 px-2 font-semibold">Status</th>
+                            <tr className="border-b bg-muted/20 text-muted-foreground uppercase tracking-wider text-[11px]">
+                                <th className="py-3 px-4 font-semibold">Test Name</th>
+                                <th className="py-3 px-4 font-semibold">Result</th>
+                                <th className="py-3 px-4 font-semibold hidden sm:table-cell">Ref Range</th>
+                                <th className="py-3 px-4 font-semibold">Status</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-border">
-
-                            <tr className="hover:bg-muted/30 transition-colors">
-                                <td className="py-3 px-2 font-medium text-foreground">{ }</td>
-                                <td className="py-3 px-2 text-foreground">{ } { }</td>
-                                <td className="py-3 px-2 text-muted-foreground hidden sm:table-cell">{ }</td>
-                                <td className="py-3 px-2">
-                                    { }
-                                </td>
-                            </tr>
-
+                            {/* MAP OVER THE DYNAMIC DATA */}
+                            {report.results.map((result, index) => (
+                                <tr key={index} className="hover:bg-muted/30 transition-colors">
+                                    <td className="py-3 px-4 font-medium text-foreground">{result.analyte}</td>
+                                    <td className="py-3 px-4 text-foreground font-semibold">
+                                        {result.value} <span className="text-muted-foreground font-normal text-xs">{result.unit}</span>
+                                    </td>
+                                    <td className="py-3 px-4 text-muted-foreground hidden sm:table-cell">{result.referenceRange}</td>
+                                    <td className="py-3 px-4">
+                                        {getStatusBadge(result.status)}
+                                    </td>
+                                </tr>
+                            ))}
                         </tbody>
                     </table>
                 </div>
             </div>
-        </div>)
+        </div>
+    )
 }
