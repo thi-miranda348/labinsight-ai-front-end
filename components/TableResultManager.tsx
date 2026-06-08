@@ -114,14 +114,7 @@ export function TableResultsManager({ report }: { report: AnalysisReport }) {
                                 </tr>
                             ))}
 
-                            {/* Fallback if filter returns empty */}
-                            {filteredResults.length === 0 && (
-                                <tr>
-                                    <td colSpan={4} className="py-8 text-center text-muted-foreground">
-                                        No records found for the "{activeFilter}" status.
-                                    </td>
-                                </tr>
-                            )}
+
                         </tbody>
                     </table>
                 </div>

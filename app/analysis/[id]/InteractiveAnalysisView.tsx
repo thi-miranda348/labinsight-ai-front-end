@@ -1,10 +1,19 @@
 "use client"
 
+import { useState, useRef, useEffect } from "react";
 import { AnalysisReport, Patient } from "@/app/types"
 import { ChevronRight, Dot, DownloadIcon, BadgeCheck, BotMessageSquare, TriangleAlert, FlaskConicalIcon, Send, MoreVertical, DotIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TableResultsManager } from "../../../components/TableResultManager";
 import { PatientReportTitle } from "@/components/PatientReportTitle";
+
+// Define the shape of the chat messages
+interface ChatMessage {
+    id: string;
+    sender: 'ai' | 'doctor';
+    text: string;
+    timestamp: string;
+}
 
 interface viewProps {
     report: AnalysisReport;
@@ -13,6 +22,102 @@ interface viewProps {
 
 
 export function InteractiveAnalysisView({ report, patient }: viewProps) {
+    // Chat state
+    const [inputValue, setInputValue] = useState("");
+    const [isTyping, setIsTyping] = useState(false);
+
+    // Initialize with a welcome message
+    const [messages, setMessages] = useState<ChatMessage[]>([
+        {
+            id: 'msg-1',
+            sender: 'ai',
+            text: `I have analyzed ${patient.name}'s current results. ${report.primaryFindings}. Would you like me to cross-reference their medication history?`,
+            timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        }
+    ]);
+
+    // Ref to automatically scroll the chat down as new words stream in
+    const messagesEndRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, [messages, isTyping]);
+
+    // --- STREAMING LOGIC ---
+    const handleSendMessage = (text: string) => {
+        if (!text.trim()) return;
+
+        // Instantly add the doctor's message
+        const newMsg: ChatMessage = {
+            id: Date.now().toString(),
+            sender: 'doctor',
+            text: text,
+            timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        };
+
+        setMessages(prev => [...prev, newMsg]);
+        setInputValue(""); // Clear the input box
+        setIsTyping(true); // Turn on the bouncing dots
+
+        // Simulate network delay (1 second) before starting the stream
+        setTimeout(() => {
+            setIsTyping(false);
+            startStreamingResponse(text);
+        }, 1000);
+    };
+
+    const startStreamingResponse = (userQuery: string) => {
+        // The full string we want the AI to eventually type out
+        const fullResponse = `Based on your request regarding "${userQuery}", I am reviewing the historical data. The low MCV strongly suggests malabsorption or deficiency. I recommend proceeding with a comprehensive Iron Panel.`;
+
+        // 3. Create an EMPTY AI message in the chat
+        const aiMessageId = (Date.now() + 1).toString();
+        const initialAiMsg: ChatMessage = {
+            id: aiMessageId,
+            sender: 'ai',
+            text: "",
+            timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        };
+
+        setMessages(prev => [...prev, initialAiMsg]);
+
+        // 4. Stream the text token by token (word by word)
+        const words = fullResponse.split(" ");
+        let currentWordIndex = 0;
+
+        const typingInterval = setInterval(() => {
+            if (currentWordIndex < words.length) {
+                setMessages(prevMessages =>
+                    prevMessages.map(msg =>
+                        msg.id === aiMessageId
+                            ? { ...msg, text: msg.text + (currentWordIndex === 0 ? "" : " ") + words[currentWordIndex] }
+                            : msg
+                    )
+                );
+                currentWordIndex++;
+            } else {
+                clearInterval(typingInterval); // Stop the timer when done
+            }
+        }, 50); // 50ms per word
+    };
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter' && !isTyping) {
+            handleSendMessage(inputValue);
+        }
+    };
+
+    // Find the first critical or borderline result to suggest asking about
+    const abnormalResults = report.results.filter(r => r.status === 'Critical' || r.status === 'Borderline');
+
+    // Generate an array of dynamic strings based on the patient's actual data
+    const dynamicSuggestions = [
+        abnormalResults.length > 0
+            ? `Explain ${abnormalResults[0].analyte} risks`
+            : "Summarize normal findings",
+        "Check Drug Interactions",
+        `Compare to previous ${report.analysisType} panel`
+    ];
 
     return (
         <div className="w-full mx-auto space-y-6">
@@ -86,10 +191,10 @@ export function InteractiveAnalysisView({ report, patient }: viewProps) {
                 </div>
 
                 {/* AI chat */}
-                <div className="bg-background border rounded-xl shadow-sm overflow-hidden sticky top-20 flex flex-col h-full">
+                <div className="bg-background border rounded-xl shadow-sm overflow-hidden sticky top-20 flex flex-col h-[600px] lg:h-auto lg:min-h-[600px]">
 
                     {/* Assistant Header Section */}
-                    <div className="p-4 border-b flex items-center justify-between bg-slate-50/50 dark:bg-zinc-900/50">
+                    <div className="p-4 border-b flex items-center justify-between bg-slate-50/50 dark:bg-zinc-900/50 shrink-0">
                         <div className="flex items-center gap-2">
                             <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
                             <span className="font-bold text-sm text-slate-800 dark:text-zinc-200">
@@ -103,59 +208,73 @@ export function InteractiveAnalysisView({ report, patient }: viewProps) {
 
                     {/* Messages Flow Area Container */}
                     <div className="flex-1 overflow-y-auto p-4 space-y-4 text-xs md:text-sm">
-
-                        {/* Agent Message Block */}
-                        <div className="space-y-1.5">
-                            <span className="text-[10px] lg:text-xs font-bold text-primary uppercase flex flex-row items-center justify-start gap-0">
-                                LABINSIGHT AGENT <DotIcon className="" /> 09:12 AM
-                            </span>
-                            <div className="bg-muted p-3.5 rounded-xl rounded-tl-none text-muted-foreground leading-relaxed shadow-3xs max-w-[80%]">
-                                I have analyzed Mr. Thompson&apos;s current hematology results. The drop in Hemoglobin from 12.8 to 11.2 g/dL over 4 months is clinically significant. Would you like me to cross-reference his medication history for potential interactions?
+                        {messages.map((msg) => (
+                            <div key={msg.id} className={`space-y-1.5 ${msg.sender === 'doctor' ? 'flex flex-col items-end' : ''}`}>
+                                <span className={`text-[10px] lg:text-xs font-bold uppercase flex flex-row items-center justify-start gap-0 ${msg.sender === 'doctor' ? 'text-muted-foreground text-right' : 'text-primary'}`}>
+                                    {msg.sender === 'ai' ? (
+                                        <>LABINSIGHT AGENT <DotIcon className="" /> {msg.timestamp}</>
+                                    ) : (
+                                        <>{msg.timestamp} <DotIcon className="" /> DR. SARAH CHEN</>
+                                    )}
+                                </span>
+                                <div className={`p-3.5 rounded-xl leading-relaxed shadow-3xs max-w-[85%] ${msg.sender === 'doctor'
+                                    ? 'bg-primary text-primary-foreground rounded-tr-none'
+                                    : 'bg-muted text-foreground rounded-tl-none border border-border'
+                                    }`}>
+                                    {msg.text}
+                                </div>
                             </div>
-                        </div>
-
-                        {/* Doctor Message Block */}
-                        <div className="space-y-1.5 flex flex-col items-end">
-                            <span className="text-[10px] lg:text-xs font-bold text-muted-foreground uppercase block text-right flex flex-row items-center justify-start gap-0">
-                                09:14 AM <DotIcon className="" /> DR. SARAH CHEN
-                            </span>
-                            <div className="bg-primary p-3.5 rounded-xl rounded-tr-none text-white leading-relaxed shadow-3xs max-w-[80%]">
-                                Yes, please cross-reference. Also, what is the probability of malabsorption based on the low MCV?
-                            </div>
-                        </div>
+                        ))}
 
                         {/* Agent Typeloader Status */}
-                        <div className="space-y-1">
-                            <span className="text-[10px] lg:text-xs font-bold text-primary uppercase flex flex-row items-center justify-start gap-0">
-                                LABINSIGHT AGENT
-                            </span>
-                            <div className="flex items-center gap-1 bg-muted px-4 py-2.5 rounded-full w-16 justify-center">
-                                <span className="w-1.5 h-1.5 bg-muted-foreground/50 rounded-full animate-bounce [animation-delay:-0.3s]" />
-                                <span className="w-1.5 h-1.5 bg-muted-foreground/50 rounded-full animate-bounce [animation-delay:-0.15s]" />
-                                <span className="w-1.5 h-1.5 bg-muted-foreground/50 rounded-full animate-bounce" />
+                        {isTyping && (
+                            <div className="space-y-1">
+                                <span className="text-[10px] lg:text-xs font-bold text-primary uppercase flex flex-row items-center justify-start gap-0">
+                                    LABINSIGHT AGENT
+                                </span>
+                                <div className="flex items-center gap-1 bg-muted px-4 py-2.5 rounded-full w-16 justify-center rounded-tl-none border border-border">
+                                    <span className="w-1.5 h-1.5 bg-muted-foreground/50 rounded-full animate-bounce [animation-delay:-0.3s]" />
+                                    <span className="w-1.5 h-1.5 bg-muted-foreground/50 rounded-full animate-bounce [animation-delay:-0.15s]" />
+                                    <span className="w-1.5 h-1.5 bg-muted-foreground/50 rounded-full animate-bounce" />
+                                </div>
                             </div>
-                        </div>
+                        )}
+                        <div ref={messagesEndRef} />
                     </div>
 
                     {/* Interactive Suggestions Actions Hub */}
-                    <div className="px-4 py-2 border-t flex flex-wrap gap-1">
-                        <Button variant={"ghost"} className="text-muted-foreground text-[8px] lg:text-xs px-1.5 py-1.5 rounded-full shadow-3xs">
-                            &ldquo;Show Ferritin History&rdquo;
-                        </Button>
-                        <Button variant={"ghost"} className="text-muted-foreground text-[8px] lg:text-xs px-1.5 py-1.5 rounded-full shadow-3xs">
-                            &ldquo;Check Drug Interactions&rdquo;
-                        </Button>
+                    <div className="px-4 py-2 border-t flex flex-wrap gap-2 shrink-0 bg-background">
+                        {dynamicSuggestions.map((suggestion, index) => (
+                            <Button
+                                key={index}
+                                variant={"outline"}
+                                onClick={() => handleSendMessage(suggestion)}
+                                disabled={isTyping}
+                                className="text-muted-foreground text-[10px] lg:text-xs px-3 py-1.5 rounded-full h-auto shadow-sm hover:border-primary hover:text-primary transition-colors"
+                            >
+                                "{suggestion}"
+                            </Button>
+                        ))}
                     </div>
 
                     {/* Input Box Prompt Bar */}
-                    <div className="p-3 border-t">
+                    <div className="p-3 border-t shrink-0">
                         <div className="relative flex items-center">
                             <input
                                 type="text"
                                 placeholder="Ask me something..."
-                                className="w-full h-10 pl-3 pr-10 border rounded-lg text-xs outline-none bg-muted focus:border-ring transition-all"
+                                // If inputValue is ever undefined or null, just use an empty string instead.
+                                value={inputValue || ""}
+                                onChange={(e) => setInputValue(e.target.value)}
+                                onKeyDown={handleKeyDown}
+                                disabled={isTyping}
+                                className="w-full h-10 pl-3 pr-10 border rounded-lg text-xs outline-none bg-muted focus:border-ring transition-all disabled:opacity-50"
                             />
-                            <Button className="absolute right-1 p-1.5 rounded-md shadow-sm">
+                            <Button
+                                onClick={() => handleSendMessage(inputValue)}
+                                disabled={!inputValue.trim() || isTyping}
+                                className="absolute right-1 p-1.5 h-8 w-8 rounded-md"
+                            >
                                 <Send className="w-3.5 h-3.5" />
                             </Button>
                         </div>
