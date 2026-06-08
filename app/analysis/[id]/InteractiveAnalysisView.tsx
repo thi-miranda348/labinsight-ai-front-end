@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react";
+import { toast } from "sonner";
 import { AnalysisReport, Patient } from "@/app/types"
 import { ChevronRight, Dot, DownloadIcon, BadgeCheck, BotMessageSquare, TriangleAlert, FlaskConicalIcon, Send, MoreVertical, DotIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -22,6 +23,7 @@ interface viewProps {
 
 
 export function InteractiveAnalysisView({ report, patient }: viewProps) {
+
     // Chat state
     const [inputValue, setInputValue] = useState("");
     const [isTyping, setIsTyping] = useState(false);
@@ -136,14 +138,29 @@ export function InteractiveAnalysisView({ report, patient }: viewProps) {
 
                     {/* buttons container */}
                     <div className="flex flex-row justify-between items-center gap-2 md:gap-3 lg:gap-4">
-                        <Button variant={"outline"} className="flex flex-row items-center justify-center gap-1 lg:gap-3">
-                            <DownloadIcon className="w-5 h-5"></DownloadIcon>
-                            Export PDF
+                        <Button
+                            variant={"outline"}
+                            className="flex flex-row items-center justify-center gap-1 lg:gap-3"
+                            onClick={() => {
+                                toast.info("Generating PDF file...", {
+                                    description: "The system is exporting patient data."
+                                });
+                            }}
+                        >
+                            <DownloadIcon className="w-5 h-5" /> Export PDF
                         </Button>
 
-                        <Button className="flex flex-row items-center justify-center gap-1 lg:gap-2">
-                            <BadgeCheck className="w-5 h-5"></BadgeCheck>
-                            Validate Analysis
+                        <Button
+                            className="flex flex-row items-center justify-center gap-1 lg:gap-2"
+                            onClick={() => {
+                                toast.promise(new Promise((resolve) => setTimeout(resolve, 1500)), {
+                                    loading: 'Validating data...',
+                                    success: 'The report has been successfully verified!',
+                                    error: 'An error occurred.',
+                                });
+                            }}
+                        >
+                            <BadgeCheck className="w-5 h-5" /> Validate Analysis
                         </Button>
                     </div>
                 </div>

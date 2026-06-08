@@ -1,6 +1,7 @@
 import { mockReports, mockPatients } from "@/app/lib/mockData";
 import { InteractiveAnalysisView } from "./InteractiveAnalysisView";
 import { notFound } from "next/navigation";
+import { Toaster } from "@/components/ui/sonner";
 
 interface PageProps {
     params: Promise<{ id: string }>;
@@ -23,7 +24,9 @@ export default async function AnalysisPage({ params }: PageProps) {
 
     return (
         <main className="min-h-screen bg-background p-4 md:p-6 text-foreground">
+
             <InteractiveAnalysisView report={currentReport} patient={patient} />
+            <Toaster position="top-right" richColors />
         </main>
     );
 }
