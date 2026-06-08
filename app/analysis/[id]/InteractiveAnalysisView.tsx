@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { toast } from "sonner";
 import { AnalysisReport, Patient } from "@/app/types"
-import { ChevronRight, Dot, DownloadIcon, BadgeCheck, BotMessageSquare, TriangleAlert, FlaskConicalIcon, Send, MoreVertical, DotIcon } from "lucide-react";
+import { ChevronRight, DownloadIcon, BadgeCheck, BotMessageSquare, TriangleAlert, FlaskConicalIcon, Send, MoreVertical, DotIcon, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TableResultsManager } from "../../../components/TableResultManager";
 import { PatientReportTitle } from "@/components/PatientReportTitle";
@@ -121,6 +121,11 @@ export function InteractiveAnalysisView({ report, patient }: viewProps) {
         `Compare to previous ${report.analysisType} panel`
     ];
 
+    // Find the most urgent concern
+    const primaryConcern = report.results.find(r => r.status === 'Critical')
+        || report.results.find(r => r.status === 'Borderline')
+        || { analyte: "No immediate concerns", status: "Normal" };
+
     return (
         <div className="w-full mx-auto space-y-6">
 
@@ -185,10 +190,19 @@ export function InteractiveAnalysisView({ report, patient }: viewProps) {
                             <div className="w-full grid grid-cols-1 md:grid-cols-2 items-center justify-between gap-3">
                                 <div className="w-full h-full bg-background rounded-lg px-4 py-4 lg:px-6 lg:py-6 border border-border shadow-sm">
                                     <h4 className="">Primary Concern</h4>
-                                    <div className="text-destructive flex items-center justify-start gap-2">
-                                        <TriangleAlert className="w-5 h-5" />
-                                        <span className="font-bold">{report.overallStatus} Alert</span>
-                                    </div>
+                                    {primaryConcern ? (
+                                        <div className={`flex items-center justify-start gap-2 ${primaryConcern.status === 'Critical' ? 'text-destructive' : 'text-amber-600'}`}>
+                                            <TriangleAlert className="w-5 h-5" />
+                                            <span className="font-bold">
+                                                {primaryConcern.analyte}
+                                            </span>
+                                        </div>
+                                    ) : (
+                                        <div className="flex items-center justify-start gap-2 text-emerald-600">
+                                            <Info className="w-5 h-5" />
+                                            <span className="font-bold">No critical concerns</span>
+                                        </div>
+                                    )}
                                 </div>
                                 <div className="w-full h-full bg-background rounded-lg px-4 py-4 lg:px-6 lg:py-6 border border-border shadow-sm">
                                     <h4 className="">Recommended Action</h4>
