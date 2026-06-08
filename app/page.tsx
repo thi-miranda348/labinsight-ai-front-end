@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { CircleCheck, FileUp, Filter, Download, ClipboardCheck, Share2, Printer, MessageSquareText, CalendarMinus2, BotMessageSquare } from "lucide-react";
 import { mockReports } from "./lib/mockData";
@@ -7,10 +8,68 @@ import { TableResultsManager } from "@/components/TableResultManager";
 
 export default function Home() {
 
+  // upload file state
+  const [isDragging, setIsDragging] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [fileName, setFileName] = useState("");
+
   // sort the newest report recently
   const recentReport = [...mockReports].sort((a, b) =>
     new Date(b.date).getTime() - new Date(a.date).getTime()
   )[0];
+
+  // Drag & drop handlers
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault(); // Stops browser from opening the file in a new tab
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+
+    // Grab the file they dropped
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      startSimulatedUpload(e.dataTransfer.files[0].name);
+    }
+  };
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Grab the file they selected via the click menu
+    if (e.target.files && e.target.files.length > 0) {
+      startSimulatedUpload(e.target.files[0].name);
+    }
+  };
+
+  // fake async upload simulation
+  const startSimulatedUpload = (name: string) => {
+    setFileName(name);
+    setIsUploading(true);
+    setUploadProgress(0);
+
+    // Fake a loading bar that goes up by 20% every 400 milliseconds
+    const interval = setInterval(() => {
+      setUploadProgress((prev) => {
+        if (prev >= 100) {
+          clearInterval(interval);
+          // Wait half a second at 100% before "completing"
+          setTimeout(() => {
+            setIsUploading(false);
+            alert(`Successfully analyzed ${name}!`); // Temporary alert for feedback
+          }, 500);
+          return 100;
+        }
+        return prev + 20;
+      });
+    }, 400);
+  };
+
 
   return (
     <main className="w-full flex flex-col bg-background text-foreground gap-8 border-b">
@@ -20,16 +79,56 @@ export default function Home() {
       </div>
 
       {/* Upload file */}
-      <div className="w-full rounded-md border border-border border-dashed border-2 flex flex-col items-center justify-center gap-2 py-8 px-2 md:px-4">
-        <FileUp className="w-16 h-16 text-primary bg-accent/70 px-2 py-2 rounded-md mb-4 " />
-        <h3 className="">Drop Lab Reports</h3>
-        <p className="text-xs md:text-sm lg:text-base text-center mb-2">Drag and drop PDF, CSV, or Text files here to begin automated analysis.</p>
-        <div className="flex items-center justify-between gap-2 mb-8 lg:mb-10">
-          <Button className="">Select Files</Button>
-          <Button variant={"outline"} className="">Scan via Camera</Button>
-        </div>
+      <div
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
+        className={`w-full rounded-md border-dashed border-2 flex flex-col items-center justify-center gap-2 py-8 px-2 md:px-4 transition-all duration-200 ${isDragging ? "border-primary bg-primary/10 scale-[1.01]" : "border-border"
+          }`}
+      >
+        <FileUp className={`w-16 h-16 px-2 py-2 rounded-md mb-4 transition-colors ${isDragging ? "text-primary bg-primary/20" : "text-primary bg-accent/70"}`} />
 
-        <div className="w-full flex justify-center items-center gap-6 text-muted-foreground/80">
+        {isUploading ? (
+          // show progress bar when uploading
+          <div className="w-full max-w-sm flex flex-col gap-3 mt-2">
+            <div className="flex justify-between text-sm font-medium text-muted-foreground">
+              <span className="truncate pr-4">Analyzing {fileName}...</span>
+              <span>{uploadProgress}%</span>
+            </div>
+            <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
+              <div
+                className="h-full bg-primary transition-all duration-300 ease-out"
+                style={{ width: `${uploadProgress}%` }}
+              />
+            </div>
+          </div>
+        ) : (
+          // show standard upload UUI when not uploading
+          <>
+            <h3 className="">Drop Lab Reports</h3>
+            <p className="text-xs md:text-sm lg:text-base text-center mb-2">
+              {isDragging ? "Drop it to start analysis!" : "Drag and drop PDF, CSV, or Text files here to begin automated analysis."}
+            </p>
+            <div className="flex items-center justify-between gap-2 mb-8 lg:mb-10 mt-2">
+              {/* Wrapping Button in a label to trigger file input */}
+              <label className="cursor-pointer">
+                <input
+                  type="file"
+                  className="hidden"
+                  accept=".pdf,.csv,.txt"
+                  onChange={handleFileSelect}
+                />
+                <div className="bg-primary text-primary-foreground hover:bg-primary/80 h-8 gap-1.5 px-6 py-5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2 inline-flex items-center justify-center whitespace-nowrap rounded-md text-xs lg:text-base font-medium ring-offset-background transition-colors">
+                  Select Files
+                </div>
+              </label>
+              <Button variant={"outline"} className="">Scan via Camera</Button>
+            </div>
+          </>
+        )}
+
+        {/* HIPAA Badges */}
+        <div className="w-full flex justify-center items-center gap-6 text-muted-foreground/80 mt-4">
           <div className="flex items-center gap-2">
             <CircleCheck className="w-4 h-4 text-muted-foreground/80" />
             <span className="text-[8px] md:text-sm">HIPAA Compliant</span>
@@ -40,6 +139,8 @@ export default function Home() {
           </div>
         </div>
       </div>
+
+
       {/* Result Table */}
       {/* Table component */}
       {recentReport && <TableResultsManager report={recentReport} />}
