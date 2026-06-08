@@ -4,15 +4,15 @@ import { AnalysisReport, Patient } from "@/app/types"
 import { ChevronRight, Dot, DownloadIcon, BadgeCheck, BotMessageSquare, TriangleAlert, FlaskConicalIcon, Send, MoreVertical, DotIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TableResultsManager } from "../../../components/TableResultManager";
+import { PatientReportTitle } from "@/components/PatientReportTitle";
+
 interface viewProps {
     report: AnalysisReport;
     patient: Patient;
 }
 
 
-
 export function InteractiveAnalysisView({ report, patient }: viewProps) {
-
 
     return (
         <div className="w-full mx-auto space-y-6">
@@ -24,12 +24,10 @@ export function InteractiveAnalysisView({ report, patient }: viewProps) {
                     <span className=""><ChevronRight className="w-4 h-4"></ChevronRight></span>
                     <span>Report #{report.id}</span>
                 </div>
+
                 {/* title */}
                 <div className="w-full flex flex-col justify-center items-start gap-2 md:flex-row md:justify-between md:items-start">
-                    <div className="flex flex-col justify-center items-start gap-0">
-                        <h2 className="">Patient: {patient.name}</h2>
-                        <p className="flex flex-row text-xs md:text-sm text-muted-foreground items-center justify-start">Patient ID: {report.patientId} <Dot className=""></Dot>{ } {patient.gender}</p>
-                    </div>
+                    <PatientReportTitle report={report} patient={patient} />
 
                     {/* buttons container */}
                     <div className="flex flex-row justify-between items-center gap-2 md:gap-3 lg:gap-4">

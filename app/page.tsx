@@ -3,8 +3,9 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { CircleCheck, FileUp, Filter, Download, ClipboardCheck, Share2, Printer, MessageSquareText, CalendarMinus2, BotMessageSquare } from "lucide-react";
-import { mockReports } from "./lib/mockData";
+import { mockPatients, mockReports } from "./lib/mockData";
 import { TableResultsManager } from "@/components/TableResultManager";
+import { PatientReportTitle } from "@/components/PatientReportTitle";
 
 export default function Home() {
 
@@ -18,6 +19,8 @@ export default function Home() {
   const recentReport = [...mockReports].sort((a, b) =>
     new Date(b.date).getTime() - new Date(a.date).getTime()
   )[0];
+
+  const recentPatient = mockPatients.find(p => p.id === recentReport?.patientId);
 
   // Drag & drop handlers
   const handleDragOver = (e: React.DragEvent) => {
@@ -140,11 +143,14 @@ export default function Home() {
         </div>
       </div>
 
-
-      {/* Result Table */}
-      {/* Table component */}
-      {recentReport && <TableResultsManager report={recentReport} />}
-
+      {recentReport && recentPatient && (
+        <>
+          {/* Result Table */}
+          <PatientReportTitle report={recentReport} patient={recentPatient} />
+          {/* Table component */}
+          <TableResultsManager report={recentReport} />
+        </>
+      )}
 
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
