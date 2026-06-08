@@ -1,10 +1,23 @@
 "use client"
 
+import { useState } from "react";
 import { AnalysisReport } from "@/app/types";
 import { Button } from "@/components/ui/button";
 import { AlertTriangle, Info, CheckCircle2 } from "lucide-react";
 
 export function TableResultsManager({ report }: { report: AnalysisReport }) {
+
+    // add state for filtering
+    const [activeFilter, setActiveFilter] = useState<'All' | 'Out of Range' | 'Critical'>('All');
+
+    // derive filtered results
+    const filteredResults = report.results.filter(result => {
+        if (activeFilter === 'All') return true;
+        if (activeFilter === 'Critical') return result.status === 'Critical';
+        // 'Out of Range' means anything that isn't 'Normal'
+        if (activeFilter === 'Out of Range') return result.status !== 'Normal';
+        return true;
+    });
 
     // Helper to generate the exact status badges
     const getStatusBadge = (status: string) => {
@@ -52,9 +65,27 @@ export function TableResultsManager({ report }: { report: AnalysisReport }) {
 
                 {/* Filter Buttons */}
                 <div className="px-4 py-3 border-b flex flex-wrap items-center gap-2 bg-background">
-                    <Button variant={"default"} className="rounded-full px-4 py-1 h-8 text-xs">All Results</Button>
-                    <Button variant={"outline"} className="rounded-full px-4 py-1 h-8 text-xs bg-background">Out of Range</Button>
-                    <Button variant={"outline"} className="rounded-full px-4 py-1 h-8 text-xs bg-background">Critical Only</Button>
+                    <Button
+                        variant={activeFilter === 'All' ? "default" : "outline"}
+                        onClick={() => setActiveFilter('All')}
+                        className={`rounded-full px-4 py-1 h-8 text-xs ${activeFilter !== 'All' ? 'bg-background' : ''}`}
+                    >
+                        All Results
+                    </Button>
+                    <Button
+                        variant={activeFilter === 'Out of Range' ? "default" : "outline"}
+                        onClick={() => setActiveFilter('Out of Range')}
+                        className={`rounded-full px-4 py-1 h-8 text-xs ${activeFilter !== 'Out of Range' ? 'bg-background' : ''}`}
+                    >
+                        Out of Range
+                    </Button>
+                    <Button
+                        variant={activeFilter === 'Critical' ? "default" : "outline"}
+                        onClick={() => setActiveFilter('Critical')}
+                        className={`rounded-full px-4 py-1 h-8 text-xs ${activeFilter !== 'Critical' ? 'bg-background' : ''}`}
+                    >
+                        Critical Only
+                    </Button>
                 </div>
 
                 {/* Table content */}
@@ -70,7 +101,7 @@ export function TableResultsManager({ report }: { report: AnalysisReport }) {
                         </thead>
                         <tbody className="divide-y divide-border">
                             {/* MAP OVER THE DYNAMIC DATA */}
-                            {report.results.map((result, index) => (
+                            {filteredResults.map((result, index) => (
                                 <tr key={index} className="hover:bg-muted/30 transition-colors">
                                     <td className="py-3 px-4 font-medium text-foreground">{result.analyte}</td>
                                     <td className="py-3 px-4 text-foreground font-semibold">
@@ -82,6 +113,15 @@ export function TableResultsManager({ report }: { report: AnalysisReport }) {
                                     </td>
                                 </tr>
                             ))}
+
+                            {/* Fallback if filter returns empty */}
+                            {filteredResults.length === 0 && (
+                                <tr>
+                                    <td colSpan={4} className="py-8 text-center text-muted-foreground">
+                                        No records found for the "{activeFilter}" status.
+                                    </td>
+                                </tr>
+                            )}
                         </tbody>
                     </table>
                 </div>

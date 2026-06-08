@@ -3,7 +3,7 @@
 import { AnalysisReport, Patient } from "@/app/types"
 import { ChevronRight, Dot, DownloadIcon, BadgeCheck, BotMessageSquare, TriangleAlert, FlaskConicalIcon, Send, MoreVertical, DotIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { TableResultsManager } from "./TableResultManager";
+import { TableResultsManager } from "../../../components/TableResultManager";
 interface viewProps {
     report: AnalysisReport;
     patient: Patient;

@@ -1,6 +1,9 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
-import { CircleCheck, FileUp, AlertTriangle, Info, CheckCircle2, Filter, Download, ClipboardCheck, Share2, Printer, MessageSquareText, CalendarMinus2, BotMessageSquare } from "lucide-react";
+import { CircleCheck, FileUp, Filter, Download, ClipboardCheck, Share2, Printer, MessageSquareText, CalendarMinus2, BotMessageSquare } from "lucide-react";
 import { mockReports } from "./lib/mockData";
+import { TableResultsManager } from "@/components/TableResultManager";
 
 export default function Home() {
 
@@ -8,32 +11,6 @@ export default function Home() {
   const recentReport = [...mockReports].sort((a, b) =>
     new Date(b.date).getTime() - new Date(a.date).getTime()
   )[0];
-
-  // Helper to generate the exact status badges from your design
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case 'Critical':
-        return (
-          <span className="inline-flex items-center gap-1.5 bg-destructive/10 text-destructive border border-destructive/20 px-2.5 py-1 rounded-md text-[8px] font-bold tracking-wider uppercase">
-            <AlertTriangle className="h-3 w-3" /> Critical
-          </span>
-        );
-      case 'Borderline':
-        return (
-          <span className="inline-flex items-center gap-1.5 bg-amber-500/10 text-amber-600 border border-amber-500/20 px-2.5 py-1 rounded-md text-[8px] font-bold tracking-wider uppercase">
-            <Info className="h-3 w-3" /> Borderline
-          </span>
-        );
-      case 'Normal':
-      default:
-        return (
-          <span className="inline-flex items-center gap-1.5 bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 px-2.5 py-1 rounded-md text-[8px] font-bold tracking-wider uppercase">
-            <CheckCircle2 className="h-3 w-3" /> Normal
-          </span>
-        );
-    }
-  };
-
 
   return (
     <main className="w-full flex flex-col bg-background text-foreground gap-8 border-b">
@@ -63,49 +40,9 @@ export default function Home() {
           </div>
         </div>
       </div>
-
       {/* Result Table */}
-      <div className="border border-border rounded-xl bg-card shadow-sm p-6">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-          <h2 className="">Recent Analysis: Patient ID {recentReport?.patientId}</h2>
-          <div className="flex items-center gap-2 md:gap-3">
-            <Button variant={"secondary"}>
-              <Filter className=""></Filter>
-              <span className="">Filter</span>
-            </Button>
-            <Button variant={"secondary"}>
-              <Download className=""></Download>
-              <span className="">Export</span>
-            </Button>
-          </div>
-        </div>
-
-        {/* Table */}
-        <div className="overflow-x-auto">
-          <table className="w-full text-xs sm:text-sm text-left">
-            <thead className="text-xs text-muted-foreground uppercase border-b border-border bg-muted/30">
-              <tr>
-                <th className="py-3 px-2 font-semibold">Test Name</th>
-                <th className="py-3 px-2 font-semibold">Result</th>
-                <th className="py-3 px-2 font-semibold hidden sm:table-cell">Ref Range</th>
-                <th className="py-3 px-2 font-semibold">Status</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border">
-              {recentReport?.results.map((result, index) => (
-                <tr key={index} className="hover:bg-muted/30 transition-colors">
-                  <td className="py-3 px-2 font-medium text-foreground">{result.analyte}</td>
-                  <td className="py-3 px-2 text-foreground">{result.value} {result.unit}</td>
-                  <td className="py-3 px-2 text-muted-foreground hidden sm:table-cell">{result.referenceRange}</td>
-                  <td className="py-3 px-2">
-                    {getStatusBadge(result.status)}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+      {/* Table component */}
+      {recentReport && <TableResultsManager report={recentReport} />}
 
 
 
