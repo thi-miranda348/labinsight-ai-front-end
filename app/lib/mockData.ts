@@ -1,7 +1,7 @@
 import { Patient, AnalysisReport } from "../types";
 
 export const mockPatients: Patient[] = [
-{
+  {
     id: "49201-B",
     name: "Arthur J. Thompson",
     dateOfBirth: "1968-04-12",
@@ -16,7 +16,7 @@ export const mockPatients: Patient[] = [
 ];
 
 export const mockReports: AnalysisReport[] = [
-    {
+  {
     id: "59829-X",
     patientId: "49201-B",
     date: "2023-10-24",
