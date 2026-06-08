@@ -208,7 +208,7 @@ export function InteractiveAnalysisView({ report, patient }: viewProps) {
                 </div>
 
                 {/* AI chat */}
-                <div className="bg-background border rounded-xl shadow-sm overflow-hidden sticky top-20 flex flex-col h-[600px] lg:h-auto lg:min-h-[600px]">
+                <div className="bg-background border rounded-xl shadow-sm overflow-hidden sticky top-20 flex flex-col h-[600px] lg:h-[calc(70vh)]">
 
                     {/* Assistant Header Section */}
                     <div className="p-4 border-b flex items-center justify-between bg-slate-50/50 dark:bg-zinc-900/50 shrink-0">
