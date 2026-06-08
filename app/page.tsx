@@ -2,10 +2,11 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { CircleCheck, FileUp, Filter, Download, ClipboardCheck, Share2, Printer, MessageSquareText, CalendarMinus2, BotMessageSquare } from "lucide-react";
+import { CircleCheck, FileUp, Filter, Download, ClipboardCheck, Share2, Printer, MessageSquareText, CalendarMinus2, BotMessageSquare, ArrowRight } from "lucide-react";
 import { mockPatients, mockReports } from "./lib/mockData";
 import { TableResultsManager } from "@/components/TableResultManager";
 import { PatientReportTitle } from "@/components/PatientReportTitle";
+import Link from "next/link";
 
 export default function Home() {
 
@@ -146,7 +147,13 @@ export default function Home() {
       {recentReport && recentPatient && (
         <>
           {/* Result Table */}
-          <PatientReportTitle report={recentReport} patient={recentPatient} />
+          <div className="flex flex-col md:flex-row justify-between gap-1">
+            <PatientReportTitle report={recentReport} patient={recentPatient} />
+
+            <Link href={`/analysis/${recentReport.id}`} className="mr-7 text-sm md:text-base text-primary font-semibold flex items-center justify-end gap-1">
+              View Details <ArrowRight className="h-3 w-3" />
+            </Link>
+          </div>
           {/* Table component */}
           <TableResultsManager report={recentReport} />
         </>
