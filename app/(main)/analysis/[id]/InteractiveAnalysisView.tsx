@@ -16,7 +16,7 @@ import {
   Info,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { TableResultsManager } from "../../../components/TableResultManager";
+import { TableResultsManager } from "@/components/TableResultManager";
 import { PatientReportTitle } from "@/components/PatientReportTitle";
 
 // Define the shape of the chat messages
