@@ -50,7 +50,7 @@ export function TableResultsManager({
           <Button
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            className="text-[11px] font-semibold uppercase tracking-wider p-0 hover:bg-transparent"
+            className="text-xs md:text-sm lg:text-sm font-semibold uppercase tracking-wider p-0 hover:bg-transparent border-none"
           >
             Test Name <ArrowUpDown className="ml-2 h-3 w-3" />
           </Button>
@@ -67,7 +67,7 @@ export function TableResultsManager({
           <Button
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            className="text-[11px] font-semibold uppercase tracking-wider p-0 hover:bg-transparent"
+            className="text-xs md:text-sm lg:text-sm font-semibold uppercase tracking-wider p-0 hover:bg-transparent border-none"
           >
             Result <ArrowUpDown className="ml-2 h-3 w-3" />
           </Button>
@@ -85,7 +85,7 @@ export function TableResultsManager({
         accessorKey: "referenceRange",
         header: "Ref Range",
         cell: ({ row }) => (
-          <span className="text-muted-foreground">
+          <span className="text-muted-foreground ">
             {row.getValue("referenceRange")}
           </span>
         ),
@@ -96,7 +96,7 @@ export function TableResultsManager({
           <Button
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            className="text-[11px] font-semibold uppercase tracking-wider p-0 hover:bg-transparent"
+            className="text-xs md:text-sm lg:text-sm font-semibold uppercase tracking-wider p-0 hover:bg-transparent border-none"
           >
             Status <ArrowUpDown className="ml-2 h-3 w-3" />
           </Button>
@@ -129,7 +129,7 @@ export function TableResultsManager({
         <div className="p-4 border-b bg-muted/30 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             <h3 className="">{report.analysisType} Diagnostic Panel</h3>
-            <span className="text-[10px] font-mono bg-background border border-border text-muted-foreground px-1.5 py-0.5 rounded">
+            <span className="text-[11px] font-mono bg-background border border-border text-muted-foreground px-1.5 py-0.5 rounded">
               {report.id}
             </span>
           </div>
@@ -178,7 +178,7 @@ export function TableResultsManager({
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr
                   key={headerGroup.id}
-                  className="border-b bg-muted/20 text-muted-foreground uppercase tracking-wider text-[11px]"
+                  className="border-b bg-accent/40 text-muted-foreground uppercase tracking-wider"
                 >
                   {headerGroup.headers.map((header) => (
                     <th key={header.id} className="py-3 px-4 font-semibold">
