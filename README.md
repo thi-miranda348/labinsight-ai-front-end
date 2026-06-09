@@ -1,36 +1,65 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# LabInsight AI
+
+> A high-performance, containerized clinical dashboard built to manage and analyze AI-powered diagnostic lab results.
+
+## Overview
+
+LabInsight AI is a frontend architecture prototype designed to demonstrate production-ready data handling, secure routing, and responsive UI design. It simulates a provider portal where clinicians can securely log in, search patient records, and review complex metabolic and hematology panels using an AI diagnostic assistant.
+
+## Core Architecture & Features
+
+### Secure Authentication & Routing
+
+- **Client-Side Route Guards:** Implemented strict route protection preventing unauthenticated access to the main application shell.
+- **Schema Validation:** Engineered robust login and registration flows utilizing **React Hook Form** and **Zod** to ensure type-safe, airtight user input validation prior to submission.
+- **Global State Management:** Utilized **Zustand** to maintain secure, global user state across the application lifecycle without unnecessary prop-drilling.
+
+### Advanced Data Management
+
+- **Complex Data Grids:** Integrated **TanStack Table (React Table)** to handle highly responsive, sortable, and filterable diagnostic panels.
+- **Stateful Data Fetching:** Implemented **TanStack Query (React Query)** to handle asynchronous data fetching, caching, and state synchronization.
+
+### Quality Assurance & DevOps
+
+- **Automated Testing:** Wrote unit tests using **Jest** and **React Testing Library** to verify authentication logic and complex UI state changes (e.g., dynamic table filtering).
+- **Containerization:** Configured a multi-stage **Docker** build utilizing Next.js `standalone` output mode to create a lightweight, optimized, and cloud-ready production container.
+
+## Tech Stack
+
+- **Framework:** Next.js 16 (App Router)
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS & shadcn/ui
+- **Data Layer:** TanStack Query & TanStack Table
+- **Forms & State:** React Hook Form, Zod, Zustand
+- **DevOps:** Docker, Jest
 
 ## Getting Started
 
-First, run the development server:
+### Local Development
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+1. Clone the repository
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Run the development server:
+   ```bash
+   npm run dev
+   ```
+4. Navigate to http://localhost:3000
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Docker Deploymnet
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Build and run the highly optimized production container:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+    ```bash
+    docker build -t labinsight-ai .
+    docker run -p 3000:3000 labinsight-ai
+    ```
 
-## Learn More
+## Running tests
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Execute the Jest test suite to verify component logic:
+`bash
+    npm run test
+    `
