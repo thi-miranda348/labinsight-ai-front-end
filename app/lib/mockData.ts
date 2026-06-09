@@ -12,7 +12,43 @@ export const mockPatients: Patient[] = [
     name: "Elena Rodriguez",
     dateOfBirth: "1985-09-23",
     gender: "Female",
-  }
+  },
+  {
+    id: "11204-C",
+    name: "Sarah Jenkins",
+    dateOfBirth: "1990-11-05",
+    gender: "Female",
+  },
+  {
+    id: "88392-M",
+    name: "Michael Chang",
+    dateOfBirth: "1955-02-18",
+    gender: "Male",
+  },
+  {
+    id: "33921-D",
+    name: "David O'Connor",
+    dateOfBirth: "1978-07-30",
+    gender: "Male",
+  },
+  {
+    id: "77210-A",
+    name: "Aisha Patel",
+    dateOfBirth: "1982-12-14",
+    gender: "Female",
+  },
+  {
+    id: "55102-J",
+    name: "James Wilson",
+    dateOfBirth: "2001-05-22",
+    gender: "Male",
+  },
+  {
+    id: "99401-G",
+    name: "Maria Garcia",
+    dateOfBirth: "1962-08-08",
+    gender: "Female",
+  },
 ];
 
 export const mockReports: AnalysisReport[] = [
@@ -21,7 +57,8 @@ export const mockReports: AnalysisReport[] = [
     patientId: "49201-B",
     date: "2023-10-24",
     analysisType: "Blood",
-    primaryFindings: "Automated analysis suggests a profile consistent with early-stage microcytic anemia, potentially secondary to iron deficiency. Significant deviations observed in MCV and Ferritin levels relative to 6-month historical trends.",
+    primaryFindings:
+      "Automated analysis suggests a profile consistent with early-stage microcytic anemia, potentially secondary to iron deficiency. Significant deviations observed in MCV and Ferritin levels relative to 6-month historical trends.",
     overallStatus: "Critical",
     results: [
       {
@@ -29,44 +66,45 @@ export const mockReports: AnalysisReport[] = [
         value: 8.4,
         unit: "x10^3/µL",
         referenceRange: "4.5 - 11.0",
-        status: "Normal"
+        status: "Normal",
       },
       {
         analyte: "Hemoglobin (Hgb)",
         value: 11.2,
         unit: "g/dL",
         referenceRange: "13.5 - 17.5",
-        status: "Critical"
+        status: "Critical",
       },
       {
         analyte: "MCV",
         value: 78.0,
         unit: "fL",
         referenceRange: "80.0 - 100.0",
-        status: "Borderline"
+        status: "Borderline",
       },
       {
         analyte: "Glucose (Fasting)",
         value: 92,
         unit: "mg/dL",
         referenceRange: "70 - 99",
-        status: "Normal"
+        status: "Normal",
       },
       {
         analyte: "Creatinine",
         value: 0.94,
         unit: "mg/dL",
         referenceRange: "0.70 - 1.30",
-        status: "Normal"
-      }
-    ]
+        status: "Normal",
+      },
+    ],
   },
   {
     id: "60112-A",
     patientId: "4429-X",
     date: "2023-10-25",
     analysisType: "Metabolics",
-    primaryFindings: "Patient exhibits significant elevations in fasting glucose and HbA1c, consistent with poorly controlled Type 2 Diabetes Mellitus. Renal function parameters remain within normal physiological range.",
+    primaryFindings:
+      "Patient exhibits significant elevations in fasting glucose and HbA1c, consistent with poorly controlled Type 2 Diabetes Mellitus. Renal function parameters remain within normal physiological range.",
     overallStatus: "Borderline",
     results: [
       {
@@ -74,22 +112,242 @@ export const mockReports: AnalysisReport[] = [
         value: 142,
         unit: "mg/dL",
         referenceRange: "70 - 99",
-        status: "Critical"
+        status: "Critical",
       },
       {
         analyte: "Hemoglobin A1c",
         value: 6.8,
         unit: "%",
         referenceRange: "4.0 - 5.6",
-        status: "Borderline"
+        status: "Borderline",
       },
       {
         analyte: "Potassium",
         value: 4.2,
         unit: "mmol/L",
         referenceRange: "3.5 - 5.2",
-        status: "Normal"
-      }
-    ]
-  }
+        status: "Normal",
+      },
+    ],
+  },
+  {
+    id: "60205-T",
+    patientId: "11204-C",
+    date: "2023-11-02",
+    analysisType: "Thyroid",
+    primaryFindings:
+      "TSH is mildly elevated with normal Free T4 levels, indicating subclinical hypothyroidism. Recommend follow-up in 3 months.",
+    overallStatus: "Borderline",
+    results: [
+      {
+        analyte: "TSH",
+        value: 5.2,
+        unit: "mIU/L",
+        referenceRange: "0.4 - 4.0",
+        status: "Borderline",
+      },
+      {
+        analyte: "Free T4",
+        value: 1.1,
+        unit: "ng/dL",
+        referenceRange: "0.8 - 1.8",
+        status: "Normal",
+      },
+      {
+        analyte: "Free T3",
+        value: 3.2,
+        unit: "pg/mL",
+        referenceRange: "2.3 - 4.2",
+        status: "Normal",
+      },
+    ],
+  },
+  {
+    id: "60399-H",
+    patientId: "88392-M",
+    date: "2023-11-10",
+    analysisType: "Heart",
+    primaryFindings:
+      "Lipid panel reveals significant hyperlipidemia with highly elevated LDL cholesterol and triglycerides. Immediate dietary intervention and statin therapy consideration advised.",
+    overallStatus: "Critical",
+    results: [
+      {
+        analyte: "Total Cholesterol",
+        value: 260,
+        unit: "mg/dL",
+        referenceRange: "< 200",
+        status: "Critical",
+      },
+      {
+        analyte: "LDL Cholesterol",
+        value: 175,
+        unit: "mg/dL",
+        referenceRange: "< 100",
+        status: "Critical",
+      },
+      {
+        analyte: "HDL Cholesterol",
+        value: 38,
+        unit: "mg/dL",
+        referenceRange: "> 40",
+        status: "Borderline",
+      },
+      {
+        analyte: "Triglycerides",
+        value: 210,
+        unit: "mg/dL",
+        referenceRange: "< 150",
+        status: "Critical",
+      },
+    ],
+  },
+  {
+    id: "60455-L",
+    patientId: "33921-D",
+    date: "2023-11-15",
+    analysisType: "Liver",
+    primaryFindings:
+      "Hepatic function panel is entirely within normal physiological limits. No signs of acute or chronic hepatic injury.",
+    overallStatus: "Normal",
+    results: [
+      {
+        analyte: "AST",
+        value: 22,
+        unit: "U/L",
+        referenceRange: "10 - 40",
+        status: "Normal",
+      },
+      {
+        analyte: "ALT",
+        value: 28,
+        unit: "U/L",
+        referenceRange: "7 - 56",
+        status: "Normal",
+      },
+      {
+        analyte: "Bilirubin (Total)",
+        value: 0.8,
+        unit: "mg/dL",
+        referenceRange: "0.1 - 1.2",
+        status: "Normal",
+      },
+      {
+        analyte: "Albumin",
+        value: 4.5,
+        unit: "g/dL",
+        referenceRange: "3.5 - 5.0",
+        status: "Normal",
+      },
+    ],
+  },
+  {
+    id: "60512-I",
+    patientId: "77210-A",
+    date: "2023-11-18",
+    analysisType: "Immune Regulation",
+    primaryFindings:
+      "Inflammatory markers are slightly elevated. CRP indicates mild systemic inflammation, though specific autoimmune markers remain negative.",
+    overallStatus: "Borderline",
+    results: [
+      {
+        analyte: "C-Reactive Protein (CRP)",
+        value: 12.5,
+        unit: "mg/L",
+        referenceRange: "< 10.0",
+        status: "Borderline",
+      },
+      {
+        analyte: "Erythrocyte Sedimentation Rate (ESR)",
+        value: 25,
+        unit: "mm/hr",
+        referenceRange: "0 - 20",
+        status: "Borderline",
+      },
+      {
+        analyte: "IgG",
+        value: 1100,
+        unit: "mg/dL",
+        referenceRange: "700 - 1600",
+        status: "Normal",
+      },
+    ],
+  },
+  {
+    id: "60677-K",
+    patientId: "55102-J",
+    date: "2023-11-20",
+    analysisType: "Kidney",
+    primaryFindings:
+      "Renal function is excellent. eGFR and standard metabolic markers show optimal clearance and kidney health.",
+    overallStatus: "Normal",
+    results: [
+      {
+        analyte: "BUN",
+        value: 14,
+        unit: "mg/dL",
+        referenceRange: "7 - 20",
+        status: "Normal",
+      },
+      {
+        analyte: "Creatinine",
+        value: 0.85,
+        unit: "mg/dL",
+        referenceRange: "0.74 - 1.35",
+        status: "Normal",
+      },
+      {
+        analyte: "eGFR",
+        value: 115,
+        unit: "mL/min",
+        referenceRange: "> 90",
+        status: "Normal",
+      },
+      {
+        analyte: "Calcium",
+        value: 9.5,
+        unit: "mg/dL",
+        referenceRange: "8.5 - 10.5",
+        status: "Normal",
+      },
+    ],
+  },
+  {
+    id: "60788-E",
+    patientId: "99401-G",
+    date: "2023-11-22",
+    analysisType: "Electrolytes",
+    primaryFindings:
+      "Patient presents with moderate hyponatremia. Clinical correlation required to determine the underlying etiology (e.g., fluid overload, diuretic use).",
+    overallStatus: "Critical",
+    results: [
+      {
+        analyte: "Sodium",
+        value: 128,
+        unit: "mmol/L",
+        referenceRange: "135 - 145",
+        status: "Critical",
+      },
+      {
+        analyte: "Potassium",
+        value: 3.8,
+        unit: "mmol/L",
+        referenceRange: "3.5 - 5.2",
+        status: "Normal",
+      },
+      {
+        analyte: "Chloride",
+        value: 95,
+        unit: "mmol/L",
+        referenceRange: "96 - 106",
+        status: "Borderline",
+      },
+      {
+        analyte: "Bicarbonate (CO2)",
+        value: 24,
+        unit: "mmol/L",
+        referenceRange: "23 - 29",
+        status: "Normal",
+      },
+    ],
+  },
 ];
