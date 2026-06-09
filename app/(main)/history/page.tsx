@@ -3,7 +3,7 @@
 
 import { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { api } from "../lib/api";
+import { api } from "@/app/lib/api";
 import Link from "next/link";
 import {
   Download,

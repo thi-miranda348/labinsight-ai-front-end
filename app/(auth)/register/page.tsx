@@ -5,15 +5,45 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Activity, Building2, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useAuthStore } from "@/lib/store";
+
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+
+const registerSchema = z.object({
+  firstName: z.string().min(2, "Required"),
+  lastName: z.string().min(2, "Required"),
+  clinic: z.string().min(2, "Required"),
+  email: z.string().email("Invalid email"),
+  password: z.string().min(8, "Password must be at least 8 characters"),
+});
+
+type RegisterFormValues = z.infer<typeof registerSchema>;
 
 export default function RegisterPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const login = useAuthStore((state) => state.login);
 
-  const handleRegister = (e: React.FormEvent) => {
-    e.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<RegisterFormValues>({
+    resolver: zodResolver(registerSchema),
+  });
+
+  const onSubmit = (data: RegisterFormValues) => {
     setIsLoading(true);
     setTimeout(() => {
+      // Save their custom name to the global store
+      login({
+        name: `Dr. ${data.firstName} ${data.lastName}`,
+        role: "Attending Physician",
+        email: data.email,
+        clinic: data.clinic,
+      });
       setIsLoading(false);
       router.push("/");
     }, 1500);
@@ -34,15 +64,15 @@ export default function RegisterPage() {
           </p>
         </div>
 
-        <form onSubmit={handleRegister} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <label className="text-xs font-semibold uppercase text-muted-foreground">
                 First Name
               </label>
               <input
-                required
-                className="w-full h-10 border rounded-md px-3 text-sm focus:border-primary outline-none"
+                {...register("firstName")}
+                className={`w-full h-10 border rounded-md px-3 text-sm outline-none ${errors.firstName ? "border-destructive" : ""}`}
               />
             </div>
             <div className="space-y-2">
@@ -50,8 +80,8 @@ export default function RegisterPage() {
                 Last Name
               </label>
               <input
-                required
-                className="w-full h-10 border rounded-md px-3 text-sm focus:border-primary outline-none"
+                {...register("lastName")}
+                className={`w-full h-10 border rounded-md px-3 text-sm outline-none ${errors.lastName ? "border-destructive" : ""}`}
               />
             </div>
           </div>
@@ -63,8 +93,8 @@ export default function RegisterPage() {
             <div className="relative">
               <Building2 className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
               <input
-                required
-                className="w-full h-10 border rounded-md pl-10 pr-3 text-sm focus:border-primary outline-none"
+                {...register("clinic")}
+                className={`w-full h-10 border rounded-md pl-10 pr-3 text-sm outline-none ${errors.clinic ? "border-destructive" : ""}`}
               />
             </div>
           </div>
@@ -74,10 +104,14 @@ export default function RegisterPage() {
               Work Email
             </label>
             <input
-              type="email"
-              required
-              className="w-full h-10 border rounded-md px-3 text-sm focus:border-primary outline-none"
+              {...register("email")}
+              className={`w-full h-10 border rounded-md px-3 text-sm outline-none ${errors.email ? "border-destructive" : ""}`}
             />
+            {errors.email && (
+              <p className="text-[10px] text-destructive">
+                {errors.email.message}
+              </p>
+            )}
           </div>
 
           <div className="space-y-2">
@@ -86,16 +120,21 @@ export default function RegisterPage() {
             </label>
             <input
               type="password"
-              required
-              className="w-full h-10 border rounded-md px-3 text-sm focus:border-primary outline-none"
+              {...register("password")}
+              className={`w-full h-10 border rounded-md px-3 text-sm outline-none ${errors.password ? "border-destructive" : ""}`}
             />
+            {errors.password && (
+              <p className="text-[10px] text-destructive">
+                {errors.password.message}
+              </p>
+            )}
           </div>
 
           <div className="bg-primary/5 border border-primary/20 rounded-lg p-3 flex gap-3 items-start mt-6">
             <ShieldCheck className="h-5 w-5 text-primary shrink-0 mt-0.5" />
             <p className="text-[10px] text-muted-foreground leading-relaxed">
               By registering, you confirm that you are an authorized healthcare
-              provider. All access is logged and monitored for HIPAA compliance.
+              provider. All access is logged and monitored.
             </p>
           </div>
 

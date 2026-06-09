@@ -1,5 +1,6 @@
 "use client";
 
+import { useAuthStore } from "@/lib/store";
 import {
   Bell,
   Search,
@@ -30,6 +31,9 @@ export function Header() {
   const [searchQuery, setSearchQuery] = useState<string>(""); // Added type safety
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
+
+  // Pull the global user state
+  const { user, logout } = useAuthStore();
 
   // Toggle search bar
   const handleSearchToggle = () => {
@@ -150,11 +154,12 @@ export function Header() {
                     </AvatarFallback>
                   </Avatar>
                   <div className="hidden md:flex md:flex-col items-start text-left">
+                    {/* Use the Zustand name, or fallback if they bypassed login */}
                     <p className="text-sm font-medium leading-none">
-                      Dr. Sarah Chen
+                      {user?.name || "Dr. Sarah Chen"}
                     </p>
                     <p className="text-[10px] text-muted-foreground mt-1 tracking-wider uppercase">
-                      Clinical Pathologist
+                      {user?.role || "Clinical Pathologist"}
                     </p>
                   </div>
                 </Button>
@@ -173,7 +178,10 @@ export function Header() {
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
                   className="text-destructive cursor-pointer hover:text-destructive hover:bg-destructive/10"
-                  onClick={() => router.push("/login")}
+                  onClick={() => {
+                    logout();
+                    router.push("/login");
+                  }}
                 >
                   <LogOut className="mr-2 h-4 w-4" />
                   <span>Log out</span>
