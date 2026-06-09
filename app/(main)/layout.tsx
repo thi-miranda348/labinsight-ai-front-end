@@ -1,6 +1,7 @@
 import { Header } from "@/components/Header";
 import { BottomNavbar } from "@/components/BottomNavbar";
 import { Footer } from "@/components/Footer";
+import { AuthGuard } from "@/components/AuthGuard"; // <-- 1. Import the Guard
 
 export default function MainLayout({
   children,
@@ -11,8 +12,9 @@ export default function MainLayout({
     <>
       <Header />
 
+      {/* 2. Wrap the children inside the AuthGuard */}
       <main className="flex-1 px-4 py-4 md:py-8 pb-24 md:pb-0 flex flex-col space-y-6 w-full">
-        {children}
+        <AuthGuard>{children}</AuthGuard>
       </main>
 
       <Footer />
