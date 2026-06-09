@@ -2,9 +2,10 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
-import { Download, Search, ChevronDown, ArrowRight, Sparkles, ShieldCheck, Calendar, Microscope, User } from "lucide-react";
+import { Download, Search, ArrowRight, Sparkles, ShieldCheck, Calendar, Microscope, User } from "lucide-react";
 import { mockPatients, mockReports } from "../lib/mockData";
 import { Button } from "@/components/ui/button";
+import { MobileReportCard } from "@/components/MobileReportCard";
 
 export default function HistoryPage() {
 
@@ -104,8 +105,24 @@ export default function HistoryPage() {
                 <Button variant="ghost" onClick={clearFilters} className="px-4 rounded-full">Clear All</Button>
             </div>
 
-            {/* Data Table */}
-            <div className="border border-border rounded-xl bg-card shadow-sm overflow-hidden">
+            {/* data table card - mobile  */}
+            <div className="grid grid-cols-1 gap-4 md:hidden">
+                {filteredReports.map((report) => {
+                    const patient = mockPatients.find(p => p.id === report.patientId);
+                    return (
+                        <MobileReportCard
+                            key={report.id}
+                            report={report}
+                            patient={patient}
+                            statusBadge={getStatusBadge(report.overallStatus)}
+                        />
+                    );
+                })}
+            </div>
+
+
+            {/* Data Table - desktop */}
+            <div className="hidden md:block border border-border rounded-xl bg-card shadow-sm overflow-hidden">
                 <table className="w-full text-sm text-left">
                     <thead className="text-[11px] text-muted-foreground uppercase border-b bg-muted/20">
                         <tr>
@@ -155,7 +172,7 @@ export default function HistoryPage() {
                     <div>
                         <h3 className="text-lg font-bold text-primary mb-2">Archive Trend Insight</h3>
                         <p className="text-sm text-foreground/80 leading-relaxed">
-                            Based on your current filters, there has been a <strong className="text-foreground">12% increase</strong> in Metabolic Screening volume compared to the previous quarter. AI confidence scores for "Acute Risk" detection have improved by 4.2% following the latest diagnostic engine update.
+                            Based on your current filters, there has been a <strong className="text-foreground">12% increase</strong> in Metabolic Screening volume compared to the previous quarter. AI confidence scores for &quot;Acute Risk&quot; detection have improved by 4.2% following the latest diagnostic engine update.
                         </p>
                     </div>
                 </div>

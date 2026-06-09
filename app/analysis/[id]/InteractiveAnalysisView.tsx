@@ -34,11 +34,12 @@ export function InteractiveAnalysisView({ report, patient }: viewProps) {
             id: 'msg-1',
             sender: 'ai',
             text: `I have analyzed ${patient.name}'s current results. ${report.primaryFindings}. Would you like me to cross-reference their medication history?`,
-            timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            timestamp: "Just now"
         }
     ]);
 
     // Ref to automatically scroll the chat down as new words stream in
+    const messageIdCounter = useRef(2);
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -49,9 +50,11 @@ export function InteractiveAnalysisView({ report, patient }: viewProps) {
     const handleSendMessage = (text: string) => {
         if (!text.trim()) return;
 
-        // Instantly add the doctor's message
+        // Generate ID safely using the ref
+        const docMessageId = `msg-${messageIdCounter.current++}`;
+
         const newMsg: ChatMessage = {
-            id: Date.now().toString(),
+            id: docMessageId,
             sender: 'doctor',
             text: text,
             timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
@@ -73,7 +76,7 @@ export function InteractiveAnalysisView({ report, patient }: viewProps) {
         const fullResponse = `Based on your request regarding "${userQuery}", I am reviewing the historical data. The low MCV strongly suggests malabsorption or deficiency. I recommend proceeding with a comprehensive Iron Panel.`;
 
         // 3. Create an EMPTY AI message in the chat
-        const aiMessageId = (Date.now() + 1).toString();
+        const aiMessageId = `msg-${messageIdCounter.current++}`;
         const initialAiMsg: ChatMessage = {
             id: aiMessageId,
             sender: 'ai',
@@ -165,7 +168,7 @@ export function InteractiveAnalysisView({ report, patient }: viewProps) {
                                 });
                             }}
                         >
-                            <BadgeCheck className="w-5 h-5" /> Validate Analysis
+                            <BadgeCheck className="w-5 h-5" /> Validate
                         </Button>
                     </div>
                 </div>
@@ -283,7 +286,7 @@ export function InteractiveAnalysisView({ report, patient }: viewProps) {
                                 disabled={isTyping}
                                 className="text-muted-foreground text-[10px] lg:text-xs px-3 py-1.5 rounded-full h-auto shadow-sm hover:border-primary hover:text-primary transition-colors"
                             >
-                                "{suggestion}"
+                                &quot;{suggestion}&quot;
                             </Button>
                         ))}
                     </div>

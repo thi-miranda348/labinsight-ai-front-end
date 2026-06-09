@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { AnalysisReport } from "@/app/types";
 import { Button } from "@/components/ui/button";
-import { AlertTriangle, Info, CheckCircle2 } from "lucide-react";
+import { StatusBadge } from "@/components/StatusBadge";
+import { MobileResultCard } from "./MobileResultCard";
 
 export function TableResultsManager({ report }: { report: AnalysisReport }) {
 
@@ -19,30 +20,7 @@ export function TableResultsManager({ report }: { report: AnalysisReport }) {
         return true;
     });
 
-    // Helper to generate the exact status badges
-    const getStatusBadge = (status: string) => {
-        switch (status) {
-            case 'Critical':
-                return (
-                    <span className="inline-flex items-center gap-1.5 bg-destructive/10 text-destructive border border-destructive/20 px-2.5 py-1 rounded-md text-[10px] font-bold tracking-wider uppercase">
-                        <AlertTriangle className="h-3 w-3" /> Critical
-                    </span>
-                );
-            case 'Borderline':
-                return (
-                    <span className="inline-flex items-center gap-1.5 bg-amber-500/10 text-amber-600 border border-amber-500/20 px-2.5 py-1 rounded-md text-[10px] font-bold tracking-wider uppercase">
-                        <Info className="h-3 w-3" /> Borderline
-                    </span>
-                );
-            case 'Normal':
-            default:
-                return (
-                    <span className="inline-flex items-center gap-1.5 bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 px-2.5 py-1 rounded-md text-[10px] font-bold tracking-wider uppercase">
-                        <CheckCircle2 className="h-3 w-3" /> Normal
-                    </span>
-                );
-        }
-    };
+
 
     return (
         <div className="space-y-6">
@@ -88,8 +66,16 @@ export function TableResultsManager({ report }: { report: AnalysisReport }) {
                     </Button>
                 </div>
 
+                {/* Mobile Card*/}
+                <div className="grid grid-cols-1 gap-3 md:hidden">
+                    {filteredResults.map((result, index) => (
+                        <MobileResultCard key={index} result={result} />
+                    ))}
+                </div>
+
+                {/* Desktop table */}
                 {/* Table content */}
-                <div className="overflow-x-auto">
+                <div className="hidden md:block overflow-x-auto">
                     <table className="w-full text-left text-xs md:text-sm border-collapse">
                         <thead>
                             <tr className="border-b bg-muted/20 text-muted-foreground uppercase tracking-wider text-[11px]">
@@ -109,7 +95,7 @@ export function TableResultsManager({ report }: { report: AnalysisReport }) {
                                     </td>
                                     <td className="py-3 px-4 text-muted-foreground hidden sm:table-cell">{result.referenceRange}</td>
                                     <td className="py-3 px-4">
-                                        {getStatusBadge(result.status)}
+                                        <StatusBadge status={result.status} />
                                     </td>
                                 </tr>
                             ))}

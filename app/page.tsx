@@ -2,12 +2,11 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { CircleCheck, FileUp, Filter, Download, ClipboardCheck, Share2, Printer, MessageSquareText, CalendarMinus2, BotMessageSquare, ArrowRight } from "lucide-react";
+import { CircleCheck, FileUp, ClipboardCheck, Share2, Printer, MessageSquareText, CalendarMinus2, BotMessageSquare, ArrowRight } from "lucide-react";
 import { mockPatients, mockReports } from "./lib/mockData";
 import { TableResultsManager } from "@/components/TableResultManager";
 import { PatientReportTitle } from "@/components/PatientReportTitle";
 import Link from "next/link";
-
 export default function Home() {
 
   // upload file state
@@ -79,7 +78,7 @@ export default function Home() {
     <main className="w-full flex flex-col bg-background text-foreground gap-8 border-b">
       <div className="">
         <h2 className="">Clinic Dashboard</h2>
-        <p className="text-muted-foreground">Welcome back, <span className="">Dr. Chen</span>. Review today's diagnostic insights and pending lab reports.</p>
+        <p className="text-muted-foreground">Welcome back, <span className="">Dr. Chen</span>. Review today&apos;s diagnostic insights and pending lab reports.</p>
       </div>
 
       {/* Upload file */}
@@ -144,10 +143,11 @@ export default function Home() {
         </div>
       </div>
 
+
       {recentReport && recentPatient && (
         <>
           {/* Result Table */}
-          <div className="flex flex-col md:flex-row justify-between gap-1">
+          <div className="hidden md:flex flex-col md:flex-row justify-between gap-1">
             <PatientReportTitle report={recentReport} patient={recentPatient} />
 
             <Link href={`/analysis/${recentReport.id}`} className="mr-7 text-sm md:text-base text-primary font-semibold flex items-center justify-end gap-1">
