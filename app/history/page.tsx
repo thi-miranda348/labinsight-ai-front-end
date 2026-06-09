@@ -1,11 +1,13 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { api } from "../lib/api";
 import Link from "next/link";
-import { Download, Search, ArrowRight, Sparkles, ShieldCheck, Calendar, Microscope, User } from "lucide-react";
-import { mockPatients, mockReports } from "../lib/mockData";
+import { Download, Search, ArrowRight, Sparkles, ShieldCheck, Calendar, Microscope, User, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { MobileReportCard } from "@/components/MobileReportCard";
+import { StatusBadge } from "@/components/StatusBadge";
 
 export default function HistoryPage() {
 
@@ -14,11 +16,26 @@ export default function HistoryPage() {
     const [searchQuery, setSearchQuery] = useState("");
     const [abnormalOnly, setAbnormalOnly] = useState(false);
 
-    // Filter Logic
+    // fetch data
+    const { data: reports, isLoading: isReportsLoading } = useQuery({
+        queryKey: ['reports'],
+        queryFn: api.getReports,
+    });
+
+    const { data: patients, isLoading: isPatientsLoading } = useQuery({
+        queryKey: ['patients'],
+        queryFn: api.getPatients,
+    });
+
+    const isLoading = isReportsLoading || isPatientsLoading;
+
+    // update the filter to handle undefined data
     const filteredReports = useMemo(() => {
-        return mockReports.filter((report) => {
-            // Find the patient object to get their name
-            const patient = mockPatients.find(p => p.id === report.patientId);
+        // If data hasn't loaded yet, return an empty array safely
+        if (!reports || !patients) return [];
+
+        return reports.filter((report) => {
+            const patient = patients.find(p => p.id === report.patientId);
             const patientName = patient ? patient.name.toLowerCase() : "";
 
             const matchesSearch =
@@ -30,22 +47,13 @@ export default function HistoryPage() {
 
             return matchesSearch && matchesType && matchesAbnormal;
         });
-    }, [searchQuery, analysisType, abnormalOnly]);
+    }, [reports, patients, searchQuery, analysisType, abnormalOnly]);
 
     const clearFilters = () => {
         setDateRange("All Time");
         setAnalysisType("All Analyses");
         setSearchQuery("");
         setAbnormalOnly(false);
-    };
-
-    const getStatusBadge = (status: string) => {
-        switch (status) {
-            case 'Critical': return <span className="bg-destructive/10 text-destructive border border-destructive/20 px-3 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider">Critical</span>;
-            case 'Borderline': return <span className="bg-amber-500/10 text-amber-600 border border-amber-500/20 px-3 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider">Borderline</span>;
-            case 'Normal':
-            default: return <span className="bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 px-3 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider">Normal</span>;
-        }
     };
 
     return (
@@ -106,62 +114,79 @@ export default function HistoryPage() {
             </div>
 
             {/* data table card - mobile  */}
-            <div className="grid grid-cols-1 gap-4 md:hidden">
-                {filteredReports.map((report) => {
-                    const patient = mockPatients.find(p => p.id === report.patientId);
-                    return (
-                        <MobileReportCard
-                            key={report.id}
-                            report={report}
-                            patient={patient}
-                            statusBadge={getStatusBadge(report.overallStatus)}
-                        />
-                    );
-                })}
-            </div>
+            {isLoading ? (
+                <div className="w-full flex flex-col gap-4 animate-pulse">
+                    {/* Mobile Skeleton */}
+                    <div className="md:hidden h-32 bg-muted rounded-xl w-full"></div>
+                    <div className="md:hidden h-32 bg-muted rounded-xl w-full"></div>
 
-
-            {/* Data Table - desktop */}
-            <div className="hidden md:block border border-border rounded-xl bg-card shadow-sm overflow-hidden">
-                <table className="w-full text-sm text-left">
-                    <thead className="text-[11px] text-muted-foreground uppercase border-b bg-muted/20">
-                        <tr>
-                            <th className="py-4 px-6">Date</th>
-                            <th className="py-4 px-6">Patient ID</th>
-                            <th className="py-4 px-6">Analysis Type</th>
-                            <th className="py-4 px-6">Primary Findings</th>
-                            <th className="py-4 px-6">Status</th>
-                            <th className="py-4 px-6 text-right">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody className="divide-y">
+                    {/* Desktop Skeleton */}
+                    <div className="hidden md:flex h-64 bg-muted/50 border border-border rounded-xl w-full items-center justify-center text-muted-foreground gap-2">
+                        <Loader2 className="w-5 h-5 animate-spin" /> Fetching archive...
+                    </div>
+                </div>
+            ) : (
+                <>
+                    {/* Mobile View: Cards */}
+                    <div className="grid grid-cols-1 gap-4 md:hidden">
                         {filteredReports.map((report) => {
-                            const patient = mockPatients.find(p => p.id === report.patientId);
+                            // Safe to use patients here because isLoading check passed
+                            const patient = patients?.find(p => p.id === report.patientId);
                             return (
-                                <tr key={report.id} className="hover:bg-muted/30 transition-colors">
-                                    <td className="py-4 px-6">{report.date}</td>
-                                    <td className="py-4 px-6 text-muted-foreground flex flex-col">
-                                        <span className="font-semibold">{patient?.name || "Unknown"}</span>
-                                        <span>{report.patientId}</span>
-
-                                    </td>
-                                    <td className="py-4 px-6">{report.analysisType}</td>
-                                    <td className="py-4 px-6 text-muted-foreground max-w-xs">{report.primaryFindings}</td>
-                                    <td className="py-4 px-6">{getStatusBadge(report.overallStatus)}</td>
-                                    <td className="py-4 px-6 text-right">
-                                        <Link href={`/analysis/${report.id}`} className="text-primary text-xs font-semibold flex items-center justify-end gap-1">
-                                            View Details <ArrowRight className="h-3 w-3" />
-                                        </Link>
-                                    </td>
-                                </tr>
+                                <MobileReportCard
+                                    key={report.id}
+                                    report={report}
+                                    patient={patient}
+                                    statusBadge={<StatusBadge status={report.overallStatus} />}
+                                />
                             );
                         })}
-                    </tbody>
-                </table>
-                {filteredReports.length === 0 && (
-                    <div className="p-12 text-center text-muted-foreground">No records found matching your filters.</div>
-                )}
-            </div>
+                    </div>
+
+                    {/* Desktop View: Table */}
+                    <div className="hidden md:block border border-border rounded-xl bg-card shadow-sm overflow-hidden">
+                        <table className="w-full text-sm text-left">
+                            <thead className="text-[11px] text-muted-foreground uppercase border-b bg-muted/20">
+                                <tr>
+                                    <th className="py-4 px-6">Date</th>
+                                    <th className="py-4 px-6">Patient Name</th>
+                                    <th className="py-4 px-6">Patient ID</th>
+                                    <th className="py-4 px-6">Analysis Type</th>
+                                    <th className="py-4 px-6">Status</th>
+                                    <th className="py-4 px-6 text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y">
+                                {filteredReports.map((report) => {
+                                    const patient = patients?.find(p => p.id === report.patientId);
+                                    return (
+                                        <tr key={report.id} className="hover:bg-muted/30 transition-colors">
+                                            <td className="py-4 px-6">{report.date}</td>
+                                            <td className="py-4 px-6 font-semibold">{patient?.name || "Unknown"}</td>
+                                            <td className="py-4 px-6 text-muted-foreground">{report.patientId}</td>
+                                            <td className="py-4 px-6">{report.analysisType}</td>
+                                            <td className="py-4 px-6"><StatusBadge status={report.overallStatus} /></td>
+                                            <td className="py-4 px-6 text-right">
+                                                <Link href={`/analysis/${report.id}`} className="text-primary text-xs font-semibold flex items-center justify-end gap-1 hover:underline">
+                                                    View Details <ArrowRight className="h-3 w-3" />
+                                                </Link>
+                                            </td>
+                                        </tr>
+                                    );
+                                })}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    {filteredReports.length === 0 && (
+                        <div className="p-12 text-center text-muted-foreground border rounded-xl border-dashed">
+                            No records found matching your filters.
+                        </div>
+                    )}
+                </>
+            )}
+
+
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
                 {/* Trend Insight (Spans 2 columns) */}

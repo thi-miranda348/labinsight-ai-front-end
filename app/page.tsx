@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { api } from "./lib/api";
 import { Button } from "@/components/ui/button";
-import { CircleCheck, FileUp, ClipboardCheck, Share2, Printer, MessageSquareText, CalendarMinus2, BotMessageSquare, ArrowRight } from "lucide-react";
-import { mockPatients, mockReports } from "./lib/mockData";
+import { CircleCheck, FileUp, ClipboardCheck, Share2, Printer, MessageSquareText, CalendarMinus2, BotMessageSquare, ArrowRight, Loader2 } from "lucide-react";
 import { TableResultsManager } from "@/components/TableResultManager";
 import { PatientReportTitle } from "@/components/PatientReportTitle";
 import Link from "next/link";
@@ -15,12 +16,25 @@ export default function Home() {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [fileName, setFileName] = useState("");
 
-  // sort the newest report recently
-  const recentReport = [...mockReports].sort((a, b) =>
-    new Date(b.date).getTime() - new Date(a.date).getTime()
-  )[0];
+  // fetch data with react query
+  const { data: reports, isLoading: isReportsLoading } = useQuery({
+    queryKey: ['reports'],
+    queryFn: api.getReports,
+  });
 
-  const recentPatient = mockPatients.find(p => p.id === recentReport?.patientId);
+  const { data: patients, isLoading: isPatientsLoading } = useQuery({
+    queryKey: ['patients'],
+    queryFn: api.getPatients,
+  });
+
+  const isLoading = isReportsLoading || isPatientsLoading;
+
+  // safely derive the recent report once data is loaded
+  const recentReport = reports ? [...reports].sort((a, b) =>
+    new Date(b.date).getTime() - new Date(a.date).getTime()
+  )[0] : null;
+
+  const recentPatient = patients && recentReport ? patients.find(p => p.id === recentReport.patientId) : null;
 
   // Drag & drop handlers
   const handleDragOver = (e: React.DragEvent) => {
@@ -143,20 +157,27 @@ export default function Home() {
         </div>
       </div>
 
-
-      {recentReport && recentPatient && (
-        <>
-          {/* Result Table */}
-          <div className="hidden md:flex flex-col md:flex-row justify-between gap-1">
-            <PatientReportTitle report={recentReport} patient={recentPatient} />
-
-            <Link href={`/analysis/${recentReport.id}`} className="mr-7 text-sm md:text-base text-primary font-semibold flex items-center justify-end gap-1">
-              View Details <ArrowRight className="h-3 w-3" />
-            </Link>
+      {/* implement loading state for the report */}
+      {isLoading ? (
+        <div className="flex flex-col gap-4 animate-pulse mt-6">
+          <div className="h-8 bg-muted rounded-md w-1/3 mb-2"></div>
+          <div className="h-64 bg-muted/50 border border-border rounded-xl w-full flex items-center justify-center text-muted-foreground gap-2">
+            <Loader2 className="w-5 h-5 animate-spin" /> Loading recent analysis...
           </div>
-          {/* Table component */}
-          <TableResultsManager report={recentReport} />
-        </>
+        </div>
+      ) : (
+        // Render the actual data once loading is finished
+        recentReport && recentPatient && (
+          <div className="flex flex-col gap-4 mt-6">
+            <div className="flex flex-col md:flex-row justify-between md:items-end gap-2">
+              <PatientReportTitle report={recentReport} patient={recentPatient} />
+              <Link href={`/analysis/${recentReport.id}`} className="text-sm md:text-base text-primary font-semibold flex items-center gap-1 hover:underline">
+                View Full Details <ArrowRight className="h-3 w-3" />
+              </Link>
+            </div>
+            <TableResultsManager report={recentReport} />
+          </div>
+        )
       )}
 
 
