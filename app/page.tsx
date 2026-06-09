@@ -4,12 +4,22 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "./lib/api";
 import { Button } from "@/components/ui/button";
-import { CircleCheck, FileUp, ClipboardCheck, Share2, Printer, MessageSquareText, CalendarMinus2, BotMessageSquare, ArrowRight, Loader2 } from "lucide-react";
+import {
+  CircleCheck,
+  FileUp,
+  ClipboardCheck,
+  Share2,
+  Printer,
+  MessageSquareText,
+  CalendarMinus2,
+  BotMessageSquare,
+  ArrowRight,
+  Loader2,
+} from "lucide-react";
 import { TableResultsManager } from "@/components/TableResultManager";
 import { PatientReportTitle } from "@/components/PatientReportTitle";
 import Link from "next/link";
 export default function Home() {
-
   // upload file state
   const [isDragging, setIsDragging] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
@@ -18,23 +28,28 @@ export default function Home() {
 
   // fetch data with react query
   const { data: reports, isLoading: isReportsLoading } = useQuery({
-    queryKey: ['reports'],
+    queryKey: ["reports"],
     queryFn: api.getReports,
   });
 
   const { data: patients, isLoading: isPatientsLoading } = useQuery({
-    queryKey: ['patients'],
+    queryKey: ["patients"],
     queryFn: api.getPatients,
   });
 
   const isLoading = isReportsLoading || isPatientsLoading;
 
   // safely derive the recent report once data is loaded
-  const recentReport = reports ? [...reports].sort((a, b) =>
-    new Date(b.date).getTime() - new Date(a.date).getTime()
-  )[0] : null;
+  const recentReport = reports
+    ? [...reports].sort(
+        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+      )[0]
+    : null;
 
-  const recentPatient = patients && recentReport ? patients.find(p => p.id === recentReport.patientId) : null;
+  const recentPatient =
+    patients && recentReport
+      ? patients.find((p) => p.id === recentReport.patientId)
+      : null;
 
   // Drag & drop handlers
   const handleDragOver = (e: React.DragEvent) => {
@@ -87,12 +102,14 @@ export default function Home() {
     }, 400);
   };
 
-
   return (
     <main className="w-full flex flex-col bg-background text-foreground gap-8 border-b">
       <div className="">
         <h2 className="">Clinic Dashboard</h2>
-        <p className="text-muted-foreground">Welcome back, <span className="">Dr. Chen</span>. Review today&apos;s diagnostic insights and pending lab reports.</p>
+        <p className="text-muted-foreground">
+          Welcome back, <span className="">Dr. Chen</span>. Review today&apos;s
+          diagnostic insights and pending lab reports.
+        </p>
       </div>
 
       {/* Upload file */}
@@ -100,10 +117,15 @@ export default function Home() {
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
-        className={`w-full rounded-md border-dashed border-2 flex flex-col items-center justify-center gap-2 py-8 px-2 md:px-4 transition-all duration-200 ${isDragging ? "border-primary bg-primary/10 scale-[1.01]" : "border-border"
-          }`}
+        className={`w-full rounded-md border-dashed border-2 flex flex-col items-center justify-center gap-2 py-8 px-2 md:px-4 transition-all duration-200 ${
+          isDragging
+            ? "border-primary bg-primary/10 scale-[1.01]"
+            : "border-border"
+        }`}
       >
-        <FileUp className={`w-16 h-16 px-2 py-2 rounded-md mb-4 transition-colors ${isDragging ? "text-primary bg-primary/20" : "text-primary bg-accent/70"}`} />
+        <FileUp
+          className={`w-16 h-16 px-2 py-2 rounded-md mb-4 transition-colors ${isDragging ? "text-primary bg-primary/20" : "text-primary bg-accent/70"}`}
+        />
 
         {isUploading ? (
           // show progress bar when uploading
@@ -124,7 +146,9 @@ export default function Home() {
           <>
             <h3 className="">Drop Lab Reports</h3>
             <p className="text-xs md:text-sm lg:text-base text-center mb-2">
-              {isDragging ? "Drop it to start analysis!" : "Drag and drop PDF, CSV, or Text files here to begin automated analysis."}
+              {isDragging
+                ? "Drop it to start analysis!"
+                : "Drag and drop PDF, CSV, or Text files here to begin automated analysis."}
             </p>
             <div className="flex items-center justify-between gap-2 mb-8 lg:mb-10 mt-2">
               {/* Wrapping Button in a label to trigger file input */}
@@ -139,7 +163,9 @@ export default function Home() {
                   Select Files
                 </div>
               </label>
-              <Button variant={"outline"} className="">Scan via Camera</Button>
+              <Button variant={"outline"} className="">
+                Scan via Camera
+              </Button>
             </div>
           </>
         )}
@@ -162,61 +188,94 @@ export default function Home() {
         <div className="flex flex-col gap-4 animate-pulse mt-6">
           <div className="h-8 bg-muted rounded-md w-1/3 mb-2"></div>
           <div className="h-64 bg-muted/50 border border-border rounded-xl w-full flex items-center justify-center text-muted-foreground gap-2">
-            <Loader2 className="w-5 h-5 animate-spin" /> Loading recent analysis...
+            <Loader2 className="w-5 h-5 animate-spin" /> Loading recent
+            analysis...
           </div>
         </div>
       ) : (
         // Render the actual data once loading is finished
-        recentReport && recentPatient && (
+        recentReport &&
+        recentPatient && (
           <div className="flex flex-col gap-4 mt-6">
             <div className="flex flex-col md:flex-row justify-between md:items-end gap-2">
-              <PatientReportTitle report={recentReport} patient={recentPatient} />
-              <Link href={`/analysis/${recentReport.id}`} className="text-sm md:text-base text-primary font-semibold flex items-center gap-1 hover:underline">
+              <PatientReportTitle
+                report={recentReport}
+                patient={recentPatient}
+              />
+              <Link
+                href={`/analysis/${recentReport.id}`}
+                className="text-sm md:text-base text-primary font-semibold flex items-center gap-1 hover:underline"
+              >
                 View Full Details <ArrowRight className="h-3 w-3" />
               </Link>
             </div>
-            <TableResultsManager report={recentReport} />
+            <TableResultsManager report={recentReport} hidePagination={true} />
           </div>
         )
       )}
 
-
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* AI clinic summary */}
         <div className="lg:col-span-2 w-full h-full bg-primary/10 border border-ring/10 rounded-lg p-6">
-          <h3 className="flex items-center flex-row gap-2 text-primary mb-2 md:mb-4"><BotMessageSquare className="h-5 w-5" /> AI Clinical Summary</h3>
-          <p className="text-sm md:text-base text-muted-foreground border border-muted rounded-lg bg-background p-2 md:p-4 mb-2 lg:mb-4">{recentReport?.primaryFindings || "No primary findings recorded for this analysis."}</p>
+          <h3 className="flex items-center flex-row gap-2 text-primary mb-2 md:mb-4">
+            <BotMessageSquare className="h-5 w-5" /> AI Clinical Summary
+          </h3>
+          <p className="text-sm md:text-base text-muted-foreground border border-muted rounded-lg bg-background p-2 md:p-4 mb-2 lg:mb-4">
+            {recentReport?.primaryFindings ||
+              "No primary findings recorded for this analysis."}
+          </p>
 
           <div className="flex items-center gap-3 pt-2">
             <div className="flex -space-x-2">
-              <div className="h-7 w-7 rounded-full bg-primary flex items-center justify-center text-white text-[10px] font-bold border-2 border-background z-10">AI</div>
-              <div className="h-7 w-7 rounded-full bg-slate-300 flex items-center justify-center text-slate-700 text-[10px] font-bold border-2 border-background z-0">DR</div>
+              <div className="h-7 w-7 rounded-full bg-primary flex items-center justify-center text-white text-[10px] font-bold border-2 border-background z-10">
+                AI
+              </div>
+              <div className="h-7 w-7 rounded-full bg-slate-300 flex items-center justify-center text-slate-700 text-[10px] font-bold border-2 border-background z-0">
+                DR
+              </div>
             </div>
-            <span className="text-xs text-muted-foreground font-medium">Verified by AI Model v4.2 and Dr. R. Miller</span>
+            <span className="text-xs text-muted-foreground font-medium">
+              Verified by AI Model v4.2 and Dr. R. Miller
+            </span>
           </div>
         </div>
 
         {/* Action */}
 
         <div className="lg:col-span-1 border border-border rounded-lg shadow-sm p-6">
-          <h3 className="flex items-center flex-row gap-2 mb-2 md:mb-4"><ClipboardCheck className=""></ClipboardCheck>Actions</h3>
+          <h3 className="flex items-center flex-row gap-2 mb-2 md:mb-4">
+            <ClipboardCheck className=""></ClipboardCheck>Actions
+          </h3>
           <div className="grid grid-cols-2 grid-rows-2 gap-3 lg:gap-6">
-            <Button variant={"ghost"} className="shadow-sm flex flex-col items-center justify-center px-4 py-12">
+            <Button
+              variant={"ghost"}
+              className="shadow-sm flex flex-col items-center justify-center px-4 py-12"
+            >
               <Share2 className="text-primary"></Share2>Share Report
             </Button>
-            <Button variant={"ghost"} className="shadow-sm flex flex-col items-center justify-center px-4 py-12">
+            <Button
+              variant={"ghost"}
+              className="shadow-sm flex flex-col items-center justify-center px-4 py-12"
+            >
               <Printer className="text-primary"></Printer>Print Summary
             </Button>
-            <Button variant={"ghost"} className="shadow-sm flex flex-col items-center justify-center px-4 py-12">
-              <MessageSquareText className="text-primary"></MessageSquareText>Ask AI Doctor
+            <Button
+              variant={"ghost"}
+              className="shadow-sm flex flex-col items-center justify-center px-4 py-12"
+            >
+              <MessageSquareText className="text-primary"></MessageSquareText>
+              Ask AI Doctor
             </Button>
-            <Button variant={"ghost"} className="shadow-sm flex flex-col items-center justify-center px-4 py-12">
-              <CalendarMinus2 className="text-primary"></CalendarMinus2>Book Consult
+            <Button
+              variant={"ghost"}
+              className="shadow-sm flex flex-col items-center justify-center px-4 py-12"
+            >
+              <CalendarMinus2 className="text-primary"></CalendarMinus2>Book
+              Consult
             </Button>
           </div>
-
         </div>
       </div>
-    </main >
+    </main>
   );
 }
