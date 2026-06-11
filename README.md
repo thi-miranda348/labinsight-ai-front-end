@@ -1,10 +1,21 @@
 # LabInsight AI
 
+
+![Next JS](https://img.shields.io/badge/Next-black.svg?style=for-the-badge&logo=next.js&logoColor=white)
+![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
+![React Hook Form](https://img.shields.io/badge/React%20Hook%20Form-%23EC5990.svg?style=for-the-badge&logo=reacthookform&logoColor=white)
+![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![Shadcn/ui](https://img.shields.io/badge/shadcn/ui-%23000000.svg?style=for-the-badge&logo=shadcnui&logoColor=white)
+![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
+![Jest](https://img.shields.io/badge/-jest-%23C21325?style=for-the-badge&logo=jest&logoColor=white)r
+
 > A high-performance, containerized clinical dashboard built to manage and analyze AI-powered diagnostic lab results.
 
 ## Overview
 
 LabInsight AI is a frontend architecture prototype designed to demonstrate production-ready data handling, secure routing, and responsive UI design. It simulates a provider portal where clinicians can securely log in, search patient records, and review complex metabolic and hematology panels using an AI diagnostic assistant.
+
+<img width="2880" height="2994" alt="labinsight-ai-front-end vercel app_" src="https://github.com/user-attachments/assets/ef5674f9-43b1-4d4c-844f-2fe9604b199c" />
 
 ## Core Architecture & Features
 
